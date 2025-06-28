@@ -2,5 +2,23 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/brotli" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/curl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/extract" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/freeglut" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/freetype" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/gumbo-parser" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/harfbuzz" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/jbig2dec" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/lcms2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/leptonica" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/libjpeg" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/mujs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/openjpeg" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/tesseract" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/zint" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/zlib" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mupdf/thirdparty/zxing-cpp" vcs="Git" />
   </component>
 </project>
