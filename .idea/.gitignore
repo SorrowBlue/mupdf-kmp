@@ -1,0 +1,14 @@
+# デフォルトの無視対象ファイル
+/shelf/
+/workspace.xml
+
+/gradle.xml
+/AndroidProjectSystem.xml
+/deploymentTargetSelector.xml
+/migrations.xml
+/artifacts
+/caches
+/compiler.xml
+
+/receipt.json
+/runConfigurations.xml
