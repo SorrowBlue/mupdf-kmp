@@ -1,3 +1,5 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec
+import java.security.MessageDigest
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
@@ -5,20 +7,17 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.muBuild)
     id("maven-publish")
+    id("com.codingfeline.buildkonfig") version "0.17.1"
 }
 
 group = "com.sorrowblue.mupdf.kmp"
 version = "1.0.0"
 
-
-// ネイティブライブラリの名前を定義
-val nativeLibName = "mynativelib"
-// JNIヘッダの出力先
-val jniHeaderDir = layout.buildDirectory.dir("generated/jni")
-
 kotlin {
     androidTarget {
+        publishLibraryVariants("release")
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -56,23 +55,16 @@ kotlin {
         }
         binaries.executable()
     }
+}
 
-    sourceSets {
-        commonMain.dependencies {
-        }
+java.sourceSets.forEach {
+    it.java.srcDir("../mupdf/platform/java/src").exclude("**/android/**")
+}
 
-        val planeJvmMain by creating {
-
-        }
-        androidMain {
-            dependsOn(planeJvmMain)
-            dependencies {
-
-            }
-        }
-        jvmMain {
-            dependsOn(planeJvmMain)
-        }
+buildkonfig {
+    packageName = "com.sorrowblue.mupdf.kmp"
+    defaultConfigs {
+        buildConfigField(FieldSpec.Type.STRING, "version", version.toString())
     }
 }
 
