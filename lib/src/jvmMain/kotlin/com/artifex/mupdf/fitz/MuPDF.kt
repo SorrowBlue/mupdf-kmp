@@ -42,6 +42,10 @@ object MuPDF {
         }
     }
 
+    @get:Synchronized
+    var isInitializedSuccessfully = false
+        private set
+
     init {
         println("platformBestMatch=$platformBestMatch")
         val usedPlatform = platformBestMatch
@@ -51,11 +55,12 @@ object MuPDF {
         val nativeLibraries = copyOrSkipLibraries(usedPlatform, muPDFTmpDir, libProperties)
         println("nativeLibraries=$nativeLibraries")
         System.load(nativeLibraries.absolutePathString())
-    }
 
-    @get:Synchronized
-    var isInitializedSuccessfully = false
-        private set
+
+        if (Context.initNative() < 0)
+            throw RuntimeException("cannot initialize mupdf library")
+        isInitializedSuccessfully = true
+    }
 
     val platformBestMatch: String
         get() {
