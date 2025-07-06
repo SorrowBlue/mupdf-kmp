@@ -94,6 +94,7 @@ class MsBuildPlugin : Plugin<Project> {
             tasks.register<Exec>("buildLibmupdfLinuxAMD64") {
                 group = "build"
                 description = "Builds libmupdf_java64.so"
+                workingDir = file("../mupdf/")
                 commandLine("make", "java",)
             }
             tasks.register<Copy>("copyLibmupdfJava64So") {
