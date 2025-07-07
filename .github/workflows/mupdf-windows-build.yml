@@ -54,7 +54,7 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
               with:
-                submodules: true
+                submodules: recursive
             - name: Download Windows Artifact
               uses: actions/download-artifact@v4
               with:
@@ -71,8 +71,8 @@ jobs:
               uses: ./.github/actions/setup-java-gradle
             - name: Run publishToMavenLocal
               run: ./gradlew :lib:publishAndroidReleasePublicationToMavenLocal :lib:publishJvmPublicationToMavenLocal
-            - name: Upload Linux library
+            - name: Upload lib
               uses: actions/upload-artifact@v4
               with:
-                  name: linux
-                  path: lib/src/jvmMain/resources/
+                  name: lib
+                  path: ~/.m2/repository/
