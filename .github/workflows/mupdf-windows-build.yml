@@ -35,7 +35,10 @@ jobs:
                   path: lib/src/jvmMain/resources/
                   compression-level: 0
 
-    build:
+    publish:
+        needs:
+              - build-windows
+              - build-linux
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
