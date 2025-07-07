@@ -75,7 +75,7 @@ kotlin {
             implementation(libs.kotlin.test)
         }
         desktopMain.dependencies {
-            implementation(projects.lib)
+//            implementation(projects.lib)
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
         }

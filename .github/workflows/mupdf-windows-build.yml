@@ -1,6 +1,6 @@
 name: Build MuPDF
 on:
-    workflow_call:
+  workflow_dispatch
 
 jobs:
     build-windows:
@@ -11,14 +11,15 @@ jobs:
             - name: Setup JDK and Gradle
               uses: ./.github/actions/setup-java-gradle
             - name: Run buildJavaviewerlib
-              run: ./gradlew :lib:addUtf8BomToFiles :lib:buildJavaviewerlibx86 :lib:buildJavaviewerlibx64
-            - name: Upload Windows dll
+              run: ./gradlew :lib:addUtf8BomToFiles :lib:desktopResourceWindowsX86 :lib:desktopResourceWindowsAMD64
+            - name: Upload Windows library
               uses: actions/upload-artifact@v4
               with:
                   name: windows
                   path: lib/src/jvmMain/resources/
+                  compression-level: 0
 
-    build-android:
+    build-linux:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -26,9 +27,41 @@ jobs:
             - name: Setup JDK and Gradle
               uses: ./.github/actions/setup-java-gradle
             - name: Run buildJavaviewerlib
-              run: ./gradlew :lib:addUtf8BomToFiles :lib:buildJavaviewerlibx86 :lib:buildJavaviewerlibx64
-            - name: Upload Windows dll
+              run: ./gradlew :lib:desktopResourceLinuxAMD64
+            - name: Upload Linux library
               uses: actions/upload-artifact@v4
               with:
+                  name: linux
+                  path: lib/src/jvmMain/resources/
+                  compression-level: 0
+
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Download Windows Artifact
+              uses: actions/download-artifact@v4
+              with:
                   name: windows
+            - name: Move Artifact to Target Directory
+              run: |
+                mkdir -p lib/src/jvmMain/resources/
+                mv windows/* lib/src/jvmMain/resources/
+            - name: Download Linux Artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: linux
+            - name: Move Artifact to Target Directory
+              run: |
+                mkdir -p lib/src/jvmMain/resources/
+                mv linux/* lib/src/jvmMain/resources/
+            - name: Setup JDK and Gradle
+              uses: ./.github/actions/setup-java-gradle
+            - name: Run publishToMavenLocal
+              run: ./gradlew :lib:publishAndroidReleasePublicationToMavenLocal :lib:publishJvmPublicationToMavenLocal
+            - name: Upload Linux library
+              uses: actions/upload-artifact@v4
+              with:
+                  name: linux
                   path: lib/src/jvmMain/resources/
