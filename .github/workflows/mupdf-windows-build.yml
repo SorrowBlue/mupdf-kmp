@@ -26,6 +26,10 @@ jobs:
     build-linux:
         runs-on: ubuntu-latest
         steps:
+            - name: Install dependencies
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y libfreetype-dev
             - name: Checkout
               uses: actions/checkout@v4
               with:
