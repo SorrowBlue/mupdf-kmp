@@ -59,18 +59,14 @@ jobs:
               uses: actions/download-artifact@v4
               with:
                   name: windows
-            - name: Move Artifact to Target Directory
-              run: |
-                mkdir -p lib/src/jvmMain/resources/
-                mv windows/* lib/src/jvmMain/resources/
+                  path: lib/src/jvmMain/resources/
+                  merge-multiple: true
             - name: Download Linux Artifact
               uses: actions/download-artifact@v4
               with:
                   name: linux
-            - name: Move Artifact to Target Directory
-              run: |
-                mkdir -p lib/src/jvmMain/resources/
-                mv linux/* lib/src/jvmMain/resources/
+                  path: lib/src/jvmMain/resources/
+                  merge-multiple: true
             - name: Setup JDK and Gradle
               uses: ./.github/actions/setup-java-gradle
             - name: Run publishToMavenLocal
