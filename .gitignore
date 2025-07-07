@@ -16,3 +16,7 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 /lib/src/jvmMain/resources/
+/.idea/appInsightsSettings.xml
+/.idea/modules.xml
+/.idea/kotlinc.xml
+/.idea/deviceManager.xml
