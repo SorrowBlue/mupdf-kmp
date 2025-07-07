@@ -1,5 +1,6 @@
-package com.artifex.mupdf.fitz
+package com.sorrowblue.mupdf.kmp
 
+import com.artifex.mupdf.fitz.Context
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Files
@@ -16,11 +17,30 @@ import kotlin.io.path.notExists
 import kotlin.io.path.pathString
 import kotlin.random.Random
 
-object MuPDF {
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+actual object MuPDF {
+
+    actual fun init() {
+        println("platformBestMatch=$platformBestMatch")
+        val usedPlatform = platformBestMatch
+        val libProperties = loadLibProperties(usedPlatform)
+        val tmpDir = createOrVerifyTmpDir()
+        val muPDFTmpDir = getOrCreateMuPDFTmpDir(tmpDir, libProperties)
+        val nativeLibraries = copyOrSkipLibraries(usedPlatform, muPDFTmpDir, libProperties)
+        println("nativeLibraries=$nativeLibraries")
+        @Suppress("UnsafeDynamicallyLoadedCode")
+        System.load(nativeLibraries.absolutePathString())
+
+        if (Context.initNative() < 0)
+            throw RuntimeException("cannot initialize mupdf library")
+        isInitializedSuccessfully = true
+    }
 
     val platformList: List<String> by lazy {
         val propertiesInputStream =
-            MuPDF::class.java.getResourceAsStream(MUPDF_PLATFORMS_PROPERTIES_FILENAME)
+            MuPDF::class.java.getResourceAsStream(
+                MUPDF_PLATFORMS_PROPERTIES_FILENAME
+            )
         if (propertiesInputStream == null) {
             throw IllegalStateException("Can not find MuPDF platform property file $MUPDF_PLATFORMS_PROPERTIES_FILENAME.")
         }
@@ -45,22 +65,6 @@ object MuPDF {
     @get:Synchronized
     var isInitializedSuccessfully = false
         private set
-
-    init {
-        println("platformBestMatch=$platformBestMatch")
-        val usedPlatform = platformBestMatch
-        val libProperties = loadLibProperties(usedPlatform)
-        val tmpDir = createOrVerifyTmpDir()
-        val muPDFTmpDir = getOrCreateMuPDFTmpDir(tmpDir, libProperties)
-        val nativeLibraries = copyOrSkipLibraries(usedPlatform, muPDFTmpDir, libProperties)
-        println("nativeLibraries=$nativeLibraries")
-        System.load(nativeLibraries.absolutePathString())
-
-
-        if (Context.initNative() < 0)
-            throw RuntimeException("cannot initialize mupdf library")
-        isInitializedSuccessfully = true
-    }
 
     val platformBestMatch: String
         get() {
@@ -242,4 +246,3 @@ object MuPDF {
         }
     }
 }
-

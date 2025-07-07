@@ -26,6 +26,9 @@ gradlePlugin {
         register(libs.plugins.muBuild) {
             implementationClass = "com.sorrowblue.mupdfkmp.plugin.MsBuildPlugin"
         }
+        register(libs.plugins.gitTagVersion) {
+            implementationClass = "com.sorrowblue.mupdfkmp.plugin.GitTagVersionPlugin"
+        }
     }
 }
 

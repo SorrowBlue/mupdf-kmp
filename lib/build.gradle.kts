@@ -1,26 +1,22 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
-import java.security.MessageDigest
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.muBuild)
+    alias(libs.plugins.gitTagVersion)
+    alias(libs.plugins.mavenPublish)
     id("maven-publish")
     id("com.codingfeline.buildkonfig") version "0.17.1"
 }
 
 group = "com.sorrowblue.mupdf.kmp"
-version = "1.0.0"
 
 kotlin {
     androidTarget {
         publishLibraryVariants("release")
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
     }
 
     listOf(
@@ -55,10 +51,16 @@ kotlin {
         }
         binaries.executable()
     }
+
+    jvmToolchain {
+        vendor = JvmVendorSpec.ADOPTIUM
+        languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
+    }
 }
 
-java.sourceSets.forEach {
-    it.java.srcDir("../mupdf/platform/java/src").exclude("**/android/**")
+java {
+    sourceSets.getByName("jvmMain").java.srcDir("../mupdf/platform/java/src")
+        .exclude("**/android/**")
 }
 
 buildkonfig {
@@ -75,14 +77,9 @@ android {
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
         }
     }
     compileOptions {
@@ -90,29 +87,61 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+    sourceSets.getByName("main").java.srcDir("../mupdf/platform/java/src")
+
     externalNativeBuild {
         ndkBuild.path("../mupdf/platform/java/Android.mk")
     }
 }
 
-// --- 配布設定 ---
-// KMPでは、ターゲットごとにPublicationが自動生成される
-// 例: "jvm", "kotlinMultiplatform", "metadata" など
-// そのため、リポジトリを指定するだけで済む場合が多い
 publishing {
     repositories {
-        mavenLocal() // ローカルのMavenリポジトリ (~/.m2/repository)
+        mavenLocal()
+    }
+}
+
+mavenPublishing {
+    publishToMavenCentral()
+
+    afterEvaluate {
+        // com.sorrowblue.mupdf:mupdf-kmp:1.0.0
+        coordinates(
+            groupId = "com.sorrowblue.mupdf",
+            artifactId = "mupdf-kmp",
+            version = version.toString()
+        )
+        logger.lifecycle("publish $version")
     }
 
-    // (オプション) Publicationのカスタマイズ
-    // KMPのJVMターゲットのアーティファクトIDは、デフォルトで "[プロジェクト名]-jvm" になる
-    // これを変更したい場合などにカスタマイズする
-    publications.withType<MavenPublication>().configureEach {
-        // POM情報をカスタマイズ
-        pom {
-            name.set("My KMP JNI Library")
-            description.set("A KMP library with JNI support for JVM.")
-            // ... (licenses, developers, scmなど)
+    pom {
+        afterEvaluate {
+            this@pom.name.set("mupdf-kmp")
+        }
+        description.set(
+            "Use MuPDF with KotlinMultiplatform"
+        )
+        inceptionYear.set("2025")
+        url.set("https://github.com/SorrowBlue/mupdf-kmp")
+        licenses {
+            license {
+                name.set("GNU Affero General Public License version 3.0")
+                url.set("https://www.gnu.org/licenses/agpl-3.0.html")
+                distribution.set("repo")
+            }
+        }
+        developers {
+            developer {
+                id.set("sorrowblue")
+                name.set("Sorrow Blue")
+                url.set("https://github.com/SorrowBlue")
+            }
+        }
+        scm {
+            url.set("https://github.com/SorrowBlue/mupdf-kmp")
+            connection.set("scm:git:https://github.com/SorrowBlue/mupdf-kmp.git")
+            developerConnection.set(
+                "scm:git:ssh://git@github.com/SorrowBlue/mupdf-kmp.git"
+            )
         }
     }
 }
