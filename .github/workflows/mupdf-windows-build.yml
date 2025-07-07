@@ -9,7 +9,7 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
               with:
-                submodules: true
+                submodules: recursive
             - name: Setup JDK and Gradle
               uses: ./.github/actions/setup-java-gradle
             - name: Run buildJavaviewerlib
@@ -27,7 +27,7 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
               with:
-                submodules: true
+                submodules: recursive
             - name: Setup JDK and Gradle
               uses: ./.github/actions/setup-java-gradle
             - name: Run buildJavaviewerlib
