@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.muBuild)
     alias(libs.plugins.gitTagVersion)
     alias(libs.plugins.mavenPublish)
-    id("maven-publish")
     id("com.codingfeline.buildkonfig") version "0.17.1"
 }
 
@@ -79,7 +78,7 @@ android {
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
         }
     }
 
