@@ -85,6 +85,7 @@ android {
     sourceSets.getByName("main").java.srcDir("../mupdf/platform/java/src")
 
     externalNativeBuild {
+        ndkVersion = libs.versions.ndkVersion.get()
         ndkBuild.path("../mupdf/platform/java/Android.mk")
     }
 }
