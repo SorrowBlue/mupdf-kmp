@@ -12,6 +12,8 @@ jobs:
                 submodules: recursive
             - name: Setup JDK and Gradle
               uses: ./.github/actions/setup-java-gradle
+            - name: Add msbuild to PATH
+              uses: microsoft/setup-msbuild@v2
             - name: Run buildJavaviewerlib
               run: ./gradlew :lib:addUtf8BomToFiles :lib:desktopResourceWindowsX86 :lib:desktopResourceWindowsAMD64
             - name: Upload Windows library
