@@ -42,6 +42,7 @@ jobs:
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Add msbuild to PATH
+        if: contains(matrix.os, 'windows')
         uses: microsoft/setup-msbuild@v2
       - name: Run addUtf8BomToFiles (windows only)
         if: contains(matrix.os, 'windows')
