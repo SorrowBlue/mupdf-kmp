@@ -35,26 +35,30 @@ jobs:
             task: ':lib:desktopResourceLinuxAMD64'
     runs-on: ${{ matrix.runs_on }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - name: Setup JDK and Gradle
-        uses: ./.github/actions/setup-java-gradle
-      - name: Add msbuild to PATH
+      - name: Setup windows
         if: contains(matrix.os, 'windows')
         uses: microsoft/setup-msbuild@v2
-      - name: Run addUtf8BomToFiles (windows only)
-        if: contains(matrix.os, 'windows')
-        run: ./gradlew :lib:addUtf8BomToFiles
-      - name: Install dependencies
+      - name: Setup linux
         if: contains(matrix.os, 'linux')
         run: |
           sudo apt-get update
           sudo apt-get install -y libfreetype-dev
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+
       - name: Run ${{ matrix.task }}
+        if: contains(matrix.os, 'windows')
+        run: ./gradlew :lib:addUtf8BomToFiles ${{ matrix.task }}
+      - name: Run ${{ matrix.task }}
+        if: contains(matrix.os, 'linux')
         run: ./gradlew ${{ matrix.task }}
-      - name: Upload Windows library
+      - name: Upload ${{ matrix.os }}-${{ matrix.arch }} library
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-${{ matrix.arch }}
@@ -65,7 +69,7 @@ jobs:
   publish:
     if: github.event_name == 'release'
     needs:
-      - build-native-lib
+      - 'build-native-lib'
     runs-on: ubuntu-latest
     environment: main
     steps:
@@ -74,7 +78,13 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - uses: ./.github/actions/setup-java-gradle
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          path: lib/src/jvmMain/resources/
+          merge-multiple: true
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
 
       - name: 🚀 Run publish
         run: ./gradlew :lib:publishAndReleaseToMavenCentral --no-configuration-cache
@@ -90,7 +100,7 @@ jobs:
   publish-snapshot:
     if: github.event_name != 'release'
     needs:
-      - build-native-lib
+      - 'build-native-lib'
     runs-on: ubuntu-latest
     environment: main
     steps:
