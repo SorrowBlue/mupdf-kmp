@@ -94,7 +94,8 @@ jobs:
   publish-snapshot:
     if: github.event_name != 'release'
     needs:
-      - 'build-native-lib'
+      - build-windows
+      - build-linux
     runs-on: ubuntu-latest
     environment: main
     steps:
