@@ -1,0 +1,108 @@
+name: Publish Maven Central
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  build-native-lib:
+    strategy:
+      matrix:
+        include:
+          - arch: 'x86'
+            os: 'windows'
+            runs_on: 'windows-latest'
+            task: ':lib:desktopResourceWindowsX86'
+          - arch: 'x64'
+            os: 'windows'
+            runs_on: 'windows-latest'
+            task: ':lib:desktopResourceWindowsAMD64'
+          - arch: 'x64'
+            os: 'linux'
+            runs_on: 'ubuntu-latest'
+            task: ':lib:desktopResourceLinuxAMD64'
+      runs-on: ${{ matrix.runs_on }}
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+          with:
+            submodules: recursive
+        - name: Setup JDK and Gradle
+          uses: ./.github/actions/setup-java-gradle
+        - name: Add msbuild to PATH
+          uses: microsoft/setup-msbuild@v2
+        - name: Run addUtf8BomToFiles (windows only)
+          if: contains(matrix.os, 'windows')
+          run: ./gradlew :lib:addUtf8BomToFiles
+        - name: Run ${{ matrix.task }}
+          run: ./gradlew ${{ matrix.task }}
+        - name: Upload Windows library
+          uses: actions/upload-artifact@v4
+          with:
+            name: ${{ matrix.os }}-${{ matrix.arch }}
+            path: lib/src/jvmMain/resources/
+            compression-level: 0
+            retention-days: 1
+
+  publish:
+    if: github.event_name == 'release'
+    needs:
+      - build-native-lib
+    runs-on: ubuntu-latest
+    environment: main
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - uses: ./.github/actions/setup-java-gradle
+
+      - name: 🚀 Run publish
+        run: ./gradlew :lib:publishAndReleaseToMavenCentral --no-configuration-cache
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYID }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralAutomaticPublishing: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALAUTOMATICPUBLISHING }}
+          ORG_GRADLE_PROJECT_signAllPublications: true
+
+  publish-snapshot:
+    if: github.event_name != 'release'
+    needs:
+      - build-native-lib
+    runs-on: ubuntu-latest
+    environment: main
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          path: lib/src/jvmMain/resources/
+          merge-multiple: true
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: 🚀 Run publish snapshot
+        run: ./gradlew :lib:publishAllPublicationsToMavenCentralRepository --no-configuration-cache
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralAutomaticPublishing: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALAUTOMATICPUBLISHING }}
+          ORG_GRADLE_PROJECT_signAllPublications: false
