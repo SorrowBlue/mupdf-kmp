@@ -22,14 +22,15 @@ Always reference these instructions first and fallback to search or bash command
 - List available tasks: `./gradlew tasks` -- takes 5-10 seconds after setup
 - Build library module: `./gradlew :lib:build` -- takes 3-5 seconds (incremental) or 15-20 seconds (clean build). NEVER CANCEL.
 - Build native MuPDF library: `./gradlew :lib:buildLibmupdfLinuxAMD64` -- takes 3.5-4 minutes. NEVER CANCEL. Set timeout to 10+ minutes.
+- Build Android debug: `./gradlew :lib:assembleDebug` -- takes 3-4 minutes for all architectures (x86, x86_64, arm64-v8a, armeabi-v7a)
 - Copy native library to resources: `./gradlew :lib:copyLibmupdfJava64So` -- takes 1-2 seconds
 - Clean all builds: `./gradlew clean` -- takes 1-2 seconds
 
-### Platform Support Limitations
-- **NETWORK RESTRICTIONS**: Cannot access Google Maven repository (dl.google.com), which prevents Android builds
-- **WORKING PLATFORMS**: JVM/desktop and native library builds work correctly
-- **BLOCKED FEATURES**: Android target, some Compose dependencies, androidx libraries
-- To work around network restrictions, comment out Android plugins in build files when testing
+### Platform Support
+- **ALL PLATFORMS SUPPORTED**: JVM/desktop, Android, iOS, and WASM targets all work correctly
+- **ANDROID BUILDS**: Full Android support with all architectures (x86, x86_64, arm64-v8a, armeabi-v7a)
+- **NATIVE LIBRARY**: Linux x64 library builds successfully and produces ~45MB `.so` file
+- **CRITICAL**: Git submodules must be initialized for Android builds to work (`git submodule update --init --recursive`)
 
 ### Native Library Build Process
 - Native library compilation is required for JVM functionality
@@ -44,10 +45,11 @@ Always reference these instructions first and fallback to search or bash command
   1. `./gradlew :lib:buildLibmupdfLinuxAMD64` -- builds native library (3.5 minutes)
   2. `./gradlew :lib:copyLibmupdfJava64So` -- copies to resources (1-2 seconds)  
   3. `./gradlew :lib:build` -- builds library module (3-5 seconds)
+- Android builds: `./gradlew :lib:assembleDebug` -- builds for all Android architectures (3-4 minutes)
 - Verify native library exists: `ls -la ./lib/src/jvmMain/resources/Linux-amd64/mupdf_java.so`
 - Library should be approximately 45MB and executable
 - Test MuPDF Java examples in `./mupdf/build/java/release/` directory
-- **SCENARIO VALIDATION**: Cannot perform full end-to-end UI validation due to network restrictions, but native library builds and JVM compilation work correctly
+- **FULL PLATFORM VALIDATION**: Can perform complete end-to-end validation including Android builds with all architectures
 
 ### Build Validation Checklist
 1. Java 21 is active: `java -version` should show version 21
@@ -55,11 +57,12 @@ Always reference these instructions first and fallback to search or bash command
 3. System dependencies installed: `pkg-config --exists freetype2` should succeed
 4. Gradle tasks complete: `./gradlew tasks` should list available tasks
 5. Native library builds: `./gradlew :lib:buildLibmupdfLinuxAMD64` completes without errors
-6. Library module builds: `./gradlew :lib:build` completes with warnings but no errors
+6. Android builds work: `./gradlew :lib:assembleDebug` completes successfully for all architectures
+7. Library module builds: `./gradlew :lib:build` completes with warnings but no errors
 
 ## Repository Structure
 - `/lib/` - Main Kotlin Multiplatform library module with MuPDF bindings
-- `/composeApp/` - Sample Compose Multiplatform application (Android support disabled due to network restrictions)
+- `/composeApp/` - Sample Compose Multiplatform application supporting all platforms
 - `/build-logic/` - Custom Gradle plugins for MsBuild integration and version management
 - `/mupdf/` - Git submodule containing MuPDF source code
 - `/.github/workflows/` - CI/CD workflows for Windows and Linux native library builds
@@ -84,6 +87,11 @@ Always reference these instructions first and fallback to search or bash command
 
 ### Available Gradle Tasks (Key Ones)
 ```
+Android tasks:
+- assembleDebug/assembleRelease - Builds Android AAR for all architectures
+- androidDependencies - Displays Android dependencies
+- connectedAndroidTest - Runs instrumentation tests on connected devices
+
 Build tasks:
 - build - Assembles and tests this project
 - buildLibmupdfLinuxAMD64 - Builds libmupdf_java64.so (3.5 minutes)
@@ -98,18 +106,18 @@ Verification tasks:
 ```
 
 ### Known Limitations and Workarounds
-- **Android builds fail**: Comment out `alias(libs.plugins.androidApplication)` and `alias(libs.plugins.androidLibrary)` in build files
-- **External dependencies fail**: Remove or comment androidx and filekit dependencies in build.gradle.kts files
 - **Configuration cache issues**: Use `--no-configuration-cache` flag when encountering serialization errors
 - **Java version errors**: Ensure both `java` and `javac` are set to Java 21 using `update-alternatives`
+- **Submodule requirement**: Android builds require initialized submodules - run `git submodule update --init --recursive` first
 
 ## Development Workflow
 1. Always ensure Java 21 environment is active before any Gradle commands
-2. Initialize submodules on fresh clone: `git submodule update --init --recursive`
+2. Initialize submodules on fresh clone: `git submodule update --init --recursive` (required for Android builds)
 3. Build native library: `./gradlew :lib:buildLibmupdfLinuxAMD64`
 4. Copy library to resources: `./gradlew :lib:copyLibmupdfJava64So`  
 5. Build and test: `./gradlew :lib:build`
-6. For publishing: `./gradlew :lib:publishToMavenLocal`
+6. For Android: `./gradlew :lib:assembleDebug` (builds all Android architectures)
+7. For publishing: `./gradlew :lib:publishToMavenLocal`
 
 **IMPORTANT**: Run build steps separately due to Gradle task dependency issues. Do not combine them in a single command.
 
