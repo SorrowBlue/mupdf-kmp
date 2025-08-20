@@ -122,3 +122,34 @@ Verification tasks:
 **IMPORTANT**: Run build steps separately due to Gradle task dependency issues. Do not combine them in a single command.
 
 Always run builds with adequate timeouts and never cancel long-running native compilation tasks.
+
+## Git and CI/CD Guidelines
+
+### Commit Message Standards
+- Write commit messages in English
+- Follow Conventional Commits format
+- Use types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+
+### Branch Naming Convention
+- Format: `[type]/[issue-number]-[simplified-issue-title]`
+- Types:
+  - `feature/`: New feature proposals and implementations
+  - `enhancement/`: Improvements to existing functions
+  - `refactor/`: Internal code improvements (no feature changes)
+  - `fix/`: Bug fixes and unexpected behavior corrections
+  - `doc/`: Documentation creation, editing, additions
+  - `dependencies/`: Dependency updates
+  - `chore/`: Build, CI/CD, dependency updates, etc.
+
+### Issue and PR Language Guidelines
+- **Issue titles**: Write in English
+- **Issue descriptions/comments**: Write in Japanese
+- **PR titles**: Write in English
+- **PR descriptions/comments**: Write in Japanese
+- **Conversations/Communication**: Conduct in Japanese
+- **PR closing**: Include `Fixed #issue_number` at the end of PR descriptions to automatically close related issues
+
+### Label Management
+- Choose appropriate labels from `.github/labels.yml` for Issues
+- PR labels are automatically assigned by ReleaseDrafter
+- Do not manually assign PR labels
