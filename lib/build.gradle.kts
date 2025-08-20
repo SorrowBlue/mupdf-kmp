@@ -2,7 +2,7 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    // alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.muBuild)
     alias(libs.plugins.gitTagVersion)
     alias(libs.plugins.mavenPublish)
@@ -12,9 +12,9 @@ plugins {
 group = "com.sorrowblue.mupdf.kmp"
 
 kotlin {
-    // androidTarget {
-    //     publishLibraryVariants("release")
-    // }
+    androidTarget {
+        publishLibraryVariants("release")
+    }
 
 //    listOf(
 //        iosX64(),
@@ -67,26 +67,26 @@ buildkonfig {
     }
 }
 
-// android {
-//     namespace = "org.sorrowblue.mupdf.kmp"
-//     compileSdk = libs.versions.android.compileSdk.get().toInt()
-// 
-//     defaultConfig {
-//         minSdk = libs.versions.android.minSdk.get().toInt()
-//     }
-//     buildTypes {
-//         getByName("release") {
-//             isMinifyEnabled = false
-//         }
-//     }
-// 
-//     sourceSets.getByName("main").java.srcDir("../mupdf/platform/java/src")
-// 
-//     externalNativeBuild {
-//         ndkVersion = libs.versions.ndkVersion.get()
-//         ndkBuild.path("../mupdf/platform/java/Android.mk")
-//     }
-// }
+android {
+    namespace = "org.sorrowblue.mupdf.kmp"
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    defaultConfig {
+        minSdk = libs.versions.android.minSdk.get().toInt()
+    }
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+        }
+    }
+
+    sourceSets.getByName("main").java.srcDir("../mupdf/platform/java/src")
+
+    externalNativeBuild {
+        ndkVersion = libs.versions.ndkVersion.get()
+        ndkBuild.path("../mupdf/platform/java/Android.mk")
+    }
+}
 
 publishing {
     repositories {
