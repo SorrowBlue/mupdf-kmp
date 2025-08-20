@@ -1,0 +1,71 @@
+name-template: 'v$RESOLVED_VERSION 🌈'
+tag-template: 'v$RESOLVED_VERSION'
+
+categories:
+  - title: '✨ Features'
+    label: 'type: :sparkles:feature'
+  - title: '🚀 Enhancements'
+    label: 'type: :rocket:enhancement'
+  - title: '🐛 Bug Fixes'
+    label: 'type: :bug:bug'
+  - title: '♻️ Refactoring'
+    label: 'type: :recycle:refactor'
+  - title: '⚙️ Maintenance'
+    label: 'type: :gear:chore'
+  - title: '📝 Documentation'
+    label: 'type: :memo:documentation'
+  - title: '📦 Dependency update'
+    label: 'type: :dependabot:dependencies'
+
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+
+change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
+
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'minor'
+  patch:
+    labels:
+      - 'patch'
+  default: patch
+
+template: |
+  ## Changes
+
+  $CHANGES
+
+autolabeler:
+  - label: 'type: :sparkles:feature'
+    branch:
+      - '/^feature[/].+/'
+  - label: 'type: :rocket:enhancement'
+    branch:
+      - '/^enhancement[/].+/'
+  - label: 'type: :recycle:refactor'
+    branch:
+      - '/^refactor[/-].+/'
+  - label: 'type: :bug:bug'
+    branch:
+      - '/^fix[/].+/'
+  - label: 'type: :memo:documentation'
+    branch:
+      - '/^doc[/-].+/'
+    files:
+      - '*.md'
+  - label: 'type: :dependabot:dependencies'
+    branch:
+      - '/dependencies[/-].+/'
+      - '/renovate[/-].+/'
+  - label: 'type: :gear:chore'
+    branch:
+      - '/^chore[/-].+/'
+
+prerelease: true
+
+include-pre-releases: true
+
+prerelease-identifier: 'beta'
