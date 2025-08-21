@@ -44,7 +44,7 @@ jobs:
     needs: check-commit
     name: Static code analysis
     if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/static-code_analysis.yml
+    uses: ./.github/workflows/static-code-analysis.yml
 
   android-lint:
     needs: check-commit
