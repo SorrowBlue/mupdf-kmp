@@ -8,7 +8,7 @@ actual object DocumentWrapper {
 
     lateinit var document: Document
 
-    actual fun openDocument(platformFile: PlatformFile) {
+    actual fun openDocument(context: PlatformContext, platformFile: PlatformFile) {
         document = Document.openDocument(platformFile.absolutePath())
     }
 

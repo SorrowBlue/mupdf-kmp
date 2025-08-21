@@ -16,7 +16,7 @@ actual fun rememberPlatformDirectory(): PlatformDirectory {
 actual class PlatformDirectory(private val context: Context) {
     actual fun openDirectory(path: String, error: (String) -> Unit) {
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            setDataAndType(path.toUri(), "resource/folder")
+            data = path.toUri()
         }
         context.startActivity(intent)
     }

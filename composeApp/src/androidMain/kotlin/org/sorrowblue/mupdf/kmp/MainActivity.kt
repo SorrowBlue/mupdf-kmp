@@ -4,17 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import org.sorrowblue.mupdf.kmp.document.DocumentWrapper
-import org.sorrowblue.mupdf.kmp.document.PageWrapper
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalContext
+import org.sorrowblue.mupdf.kmp.document.LocalPlatformContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        DocumentWrapper.context = this
-        PageWrapper.context = this
         setContent {
-            App()
+            CompositionLocalProvider(LocalPlatformContext provides LocalContext.current) {
+                App()
+            }
         }
     }
 }

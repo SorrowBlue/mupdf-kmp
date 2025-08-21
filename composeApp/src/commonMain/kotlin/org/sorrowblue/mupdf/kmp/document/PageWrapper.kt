@@ -4,5 +4,5 @@ import io.github.vinceglb.filekit.PlatformFile
 
 expect class PageWrapper {
 
-    fun save(platformFile: PlatformFile, index: Int)
+    fun save(platformContext: PlatformContext, platformFile: PlatformFile, index: Int)
 }

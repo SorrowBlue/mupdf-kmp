@@ -16,13 +16,11 @@ actual object DocumentWrapper {
     private lateinit var stream: DeviceSeekableInputStream
     private lateinit var document: Document
 
-    lateinit var context: Context
-
     init {
         MuPDF.init()
     }
 
-    actual fun openDocument(platformFile: PlatformFile) {
+    actual fun openDocument(context: PlatformContext, platformFile: PlatformFile) {
         stream = DeviceSeekableInputStream(context, platformFile.uri)
         document = Document.openDocument(stream, "pdf")
     }

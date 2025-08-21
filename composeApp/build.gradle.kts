@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.mupdfKmp.detekt)
+    alias(libs.plugins.mupdfKmp.gitTagVersion)
     alias(libs.plugins.mupdfKmp.lint)
 }
 
@@ -34,7 +35,12 @@ kotlin {
         }
         androidMain {
             dependencies {
-                implementation(projects.lib)
+                logger.lifecycle(System.getProperty("os.name"))
+                if (System.getProperty("os.name").lowercase().contains("windows")) {
+                    implementation("com.sorrowblue.mupdf:mupdf-kmp:$version")
+                } else {
+                    implementation(projects.lib)
+                }
                 implementation(compose.preview)
                 implementation(libs.androidx.activity.compose)
             }

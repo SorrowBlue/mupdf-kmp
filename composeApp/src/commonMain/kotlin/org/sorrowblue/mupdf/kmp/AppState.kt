@@ -14,9 +14,13 @@ import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.sorrowblue.mupdf.kmp.document.DocumentWrapper
+import org.sorrowblue.mupdf.kmp.document.LocalPlatformContext
+import org.sorrowblue.mupdf.kmp.document.PlatformContext
 import org.sorrowblue.mupdf.kmp.document.PlatformDirectory
 import org.sorrowblue.mupdf.kmp.document.rememberPlatformDirectory
 
@@ -32,7 +36,8 @@ interface AppState {
 fun rememberAppState(): AppState {
     val platformDirectory = rememberPlatformDirectory()
     val scope = rememberCoroutineScope()
-    val state = remember { AppStateImpl(scope = scope) }
+    val context = LocalPlatformContext.current
+    val state = remember { AppStateImpl(context = context, scope = scope) }
     state.platformDirectory = platformDirectory
     state.filePickerLauncher = rememberFilePickerLauncher(FileKitType.File("pdf")) { file ->
         state.onResultFile(file)
@@ -45,6 +50,7 @@ fun rememberAppState(): AppState {
 }
 
 private class AppStateImpl(
+    private val context: PlatformContext,
     private val scope: CoroutineScope,
 ) : AppState {
 
@@ -74,9 +80,11 @@ private class AppStateImpl(
         println("onResultFile")
         uiState = uiState.copy(running = true)
         scope.launch {
-            DocumentWrapper.openDocument(file)
-            val pageCount = DocumentWrapper.countPage()
-            log("PDFをひらいています。ファイル名: ${file.name}、ページ数: $pageCount")
+            withContext(Dispatchers.IO) {
+                DocumentWrapper.openDocument(context, file)
+                val pageCount = DocumentWrapper.countPage()
+                log("PDFをひらいています。ファイル名: ${file.name}、ページ数: $pageCount")
+            }
             delay(1000)
             directoryPickerLauncher.launch()
         }
@@ -89,14 +97,16 @@ private class AppStateImpl(
         println("onResultDirectory")
         uiState = uiState.copy(running = true)
         scope.launch {
-            val pageCount = DocumentWrapper.countPage()
-            for (i in 0 until pageCount) {
-                log("${i + 1}/$pageCount ページを保存しています")
-                val page = DocumentWrapper.loadPage(i)
-                page.save(file, i)
-                delay(100)
+            delay(2000)
+            withContext(Dispatchers.IO) {
+                val pageCount = DocumentWrapper.countPage()
+                for (i in 0 until pageCount) {
+                    log("${i + 1}/$pageCount ページを保存しています")
+                    val page = DocumentWrapper.loadPage(i)
+                    page.save(context, file, i)
+                }
+                log("全${pageCount}ページを保存しました。")
             }
-            log("全${pageCount}ページを保存しました。")
             uiState = uiState.copy(output = file.path, running = false)
         }
     }

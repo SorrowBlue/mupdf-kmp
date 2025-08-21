@@ -11,7 +11,7 @@ import io.github.vinceglb.filekit.resolve
 
 actual class PageWrapper(private val page: Page) {
 
-    actual fun save(platformFile: PlatformFile, index: Int) {
+    actual fun save(platformContext: PlatformContext, platformFile: PlatformFile, index: Int) {
         val bounds = page.bounds
         val pixmap = Pixmap(ColorSpace.DeviceRGB, bounds, false)
         pixmap.clear(0xff)
