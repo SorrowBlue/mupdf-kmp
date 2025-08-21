@@ -10,14 +10,14 @@ actual object MuPDF {
             inited = true
             try {
                 System.loadLibrary("mupdf_java")
-            } catch (e: UnsatisfiedLinkError) {
+            } catch (_: UnsatisfiedLinkError) {
                 try {
                     System.loadLibrary("mupdf_java64")
-                } catch (ee: UnsatisfiedLinkError) {
+                } catch (_: UnsatisfiedLinkError) {
                     System.loadLibrary("mupdf_java32")
                 }
             }
-            if (Context.initNative() < 0) throw RuntimeException("cannot initialize mupdf library")
+            if (Context.initNative() < 0) throw MupdfInitException("cannot initialize mupdf library")
         }
     }
 }

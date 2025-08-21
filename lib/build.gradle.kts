@@ -3,55 +3,28 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.muBuild)
-    alias(libs.plugins.gitTagVersion)
     alias(libs.plugins.mavenPublish)
-    id("com.codingfeline.buildkonfig") version "0.17.1"
+    alias(libs.plugins.buildkonfig)
+    alias(libs.plugins.mupdfKmp.muBuild)
+    alias(libs.plugins.mupdfKmp.gitTagVersion)
+    alias(libs.plugins.mupdfKmp.detekt)
+    alias(libs.plugins.mupdfKmp.lint)
 }
-
-group = "com.sorrowblue.mupdf.kmp"
 
 kotlin {
     androidTarget {
         publishLibraryVariants("release")
     }
 
-//    listOf(
-//        iosX64(),
-//        iosArm64(),
-//        iosSimulatorArm64()
-//    ).forEach { iosTarget ->
-//        iosTarget.binaries.framework {
-//            baseName = "ComposeApp"
-//            isStatic = true
-//        }
-//    }
-
     jvm()
-
-//    @OptIn(ExperimentalWasmDsl::class)
-//    wasmJs {
-//        outputModuleName.set("lib")
-//        browser {
-//            val rootDirPath = project.rootDir.path
-//            val projectDirPath = project.projectDir.path
-//            commonWebpackConfig {
-//                outputFileName = "lib.js"
-//                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-//                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
-//                        add(rootDirPath)
-//                        add(projectDirPath)
-//                    }
-//                }
-//            }
-//        }
-//        binaries.executable()
-//    }
 
     jvmToolchain {
         vendor = JvmVendorSpec.ADOPTIUM
         languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
+    }
+
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 }
 
@@ -97,45 +70,31 @@ publishing {
 mavenPublishing {
     publishToMavenCentral()
 
-    afterEvaluate {
-        // com.sorrowblue.mupdf:mupdf-kmp:1.0.0
-        coordinates(
-            groupId = "com.sorrowblue.mupdf",
-            artifactId = "mupdf-kmp",
-            version = version.toString()
-        )
-        logger.lifecycle("publish $version")
-    }
+    coordinates("com.sorrowblue.mupdf", "mupdf-kmp", version.toString())
 
     pom {
-        afterEvaluate {
-            this@pom.name.set("mupdf-kmp")
-        }
-        description.set(
-            "Use MuPDF with KotlinMultiplatform"
-        )
-        inceptionYear.set("2025")
-        url.set("https://github.com/SorrowBlue/mupdf-kmp")
+        name = "mupdf-kmp"
+        description = "Use MuPDF with KotlinMultiplatform"
+        inceptionYear = "2025"
+        url = "https://github.com/SorrowBlue/mupdf-kmp"
         licenses {
             license {
-                name.set("GNU Affero General Public License version 3.0")
-                url.set("https://www.gnu.org/licenses/agpl-3.0.html")
-                distribution.set("repo")
+                name = "GNU Affero General Public License version 3.0"
+                url = "https://www.gnu.org/licenses/agpl-3.0.html"
+                distribution = "repo"
             }
         }
         developers {
             developer {
-                id.set("sorrowblue")
-                name.set("Sorrow Blue")
-                url.set("https://github.com/SorrowBlue")
+                id = "sorrowblue"
+                name = "Sorrow Blue"
+                url = "https://github.com/SorrowBlue"
             }
         }
         scm {
-            url.set("https://github.com/SorrowBlue/mupdf-kmp")
-            connection.set("scm:git:https://github.com/SorrowBlue/mupdf-kmp.git")
-            developerConnection.set(
-                "scm:git:ssh://git@github.com/SorrowBlue/mupdf-kmp.git"
-            )
+            url = "https://github.com/SorrowBlue/mupdf-kmp"
+            connection = "scm:git:https://github.com/SorrowBlue/mupdf-kmp.git"
+            developerConnection = "scm:git:ssh://git@github.com/SorrowBlue/mupdf-kmp.git"
         }
     }
 }

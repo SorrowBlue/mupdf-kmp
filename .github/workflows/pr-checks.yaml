@@ -1,0 +1,59 @@
+name: PR Checks
+
+description: 'PRのマージ前にDetekt, AndroidLint, ビルド検証, GitHub Code Scanningを自動実行し、PRチェックとして表示するワークフロー'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+jobs:
+  # Check if this is a PR commit to main and skip if so
+  check-commit:
+    runs-on: ubuntu-latest
+    outputs:
+      should-run: ${{ steps.check.outputs.should-run }}
+    steps:
+      - name: Check if should run
+        id: check
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] && \
+             [ "${{ github.event.head_commit.committer.name }}" = "GitHub" ]; then
+            echo "should-run=false" >> $GITHUB_OUTPUT
+            echo "Skipping workflow for PR commit to main"
+          else
+            echo "should-run=true" >> $GITHUB_OUTPUT
+            echo "Running workflow"
+          fi
+
+  static-code-analysis:
+    needs: check-commit
+    name: Static code analysis
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: ./.github/workflows/static-code_analysis.yml
+
+  android-lint:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run == 'true'
+    name: Android lint
+    uses: ./.github/workflows/lint.yml
+
+  build:
+    needs: [check-commit, static-code-analysis, android-lint]
+    if: needs.check-commit.outputs.should-run == 'true'
+    name: Build Validation
+    uses: ./.github/workflows/build.yml

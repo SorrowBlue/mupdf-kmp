@@ -1,3 +1,5 @@
+import java.net.URI
+
 rootProject.name = "mupdf-kmp"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
@@ -26,6 +28,10 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        maven {
+            url = URI("https://central.sonatype.com/repository/maven-snapshots/")
+        }
+        mavenLocal()
     }
 }
 

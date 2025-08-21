@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- アイコン全体を縮小してセーフゾーンに収めるための親グループ -->
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:scaleX="0.6"
+        android:scaleY="0.6">
+
+        <!-- 背景の大きなドキュメント -->
+        <group>
+            <!-- 影 -->
+            <path
+                android:fillColor="#26000000"
+                android:pathData="M29,20 H81 C83.2,20 85,21.8 85,24 V92 C85,94.2 83.2,96 81,96 H29 C26.8,96 25,94.2 25,92 V24 C25,21.8 26.8,20 29,20 Z" />
+            <!-- 本体 -->
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M27,18 H79 C81.2,18 83,19.8 83,22 V90 C83,92.2 81.2,94 79,94 H27 C24.8,94 23,92.2 23,90 V22 C23,19.8 24.8,18 27,18 Z" />
+        </group>
+        <!-- 背景の赤いドッグイヤー -->
+        <group>
+            <path
+                android:fillColor="#B71C1C"
+                android:pathData="M65,18 L83,36 L65,36 Z" />
+            <path
+                android:fillColor="#F44336"
+                android:pathData="M65,18 L83,18 L83,36 Z" />
+        </group>
+
+        <!-- 中央の 'P' の文字 (視覚的に中央揃え) -->
+        <group
+            android:pivotX="54"
+            android:pivotY="56"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:translateX="-8">
+
+            <!-- 縦棒を長くした統合パスデータ -->
+            <path android:pathData="M42,38 v54 h12 v-22 H70 c8.8,0 16,-7.2 16,-16 c0,-8.8 -7.2,-16 -16,-16 H42 z">
+                <!-- Pに適用するグラデーションの定義 (左下 -> 右上) -->
+                <aapt:attr name="android:fillColor">
+                    <gradient
+                        android:endX="86"
+                        android:endY="38"
+                        android:startX="42"
+                        android:startY="92"
+                        android:type="linear">
+                        <item
+                            android:color="#7F52FF"
+                            android:offset="0.0" />
+                        <item
+                            android:color="#C811E2"
+                            android:offset="0.5" />
+                        <item
+                            android:color="#E54857"
+                            android:offset="1.0" />
+                    </gradient>
+                </aapt:attr>
+            </path>
+        </group>
+
+    </group>
+</vector>
