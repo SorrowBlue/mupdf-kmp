@@ -45,7 +45,9 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 }
                 finalizedBy(reportMerge)
                 exclude {
-                    it.file.path.run { contains("generated") || contains("buildkonfig") || contains("mupdf\\platform") || contains("mupdf/platform") }.also { b ->
+                    it.file.path.run {
+                        contains("generated") || contains("buildkonfig") || contains("mupdf\\platform") || contains("mupdf/platform")
+                    }.also { b ->
                         if (b) {
                             logger.lifecycle("exclude path ${it.file.path}")
                         }
