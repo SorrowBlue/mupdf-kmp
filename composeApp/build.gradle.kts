@@ -35,7 +35,6 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(projects.lib)
-                implementation("com.sorrowblue.mupdf:mupdf-kmp-android:0.0.1-SNAPSHOT")
                 implementation(compose.preview)
                 implementation(libs.androidx.activity.compose)
             }

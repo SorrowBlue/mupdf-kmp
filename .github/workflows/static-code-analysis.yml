@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🔍️Run detekt
