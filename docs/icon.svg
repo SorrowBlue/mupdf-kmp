@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="108" height="108" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+    <!-- グラデーションの定義 -->
+    <defs>
+        <linearGradient id="P-Gradient" x1="42" y1="92" x2="86" y2="38" gradientUnits="userSpaceOnUse">
+            <stop offset="0.0" stop-color="#7F52FF"/>
+            <stop offset="0.5" stop-color="#C811E2"/>
+            <stop offset="1.0" stop-color="#E54857"/>
+        </linearGradient>
+    </defs>
+
+    <!-- Background Layer (Circular) -->
+    <circle fill="#262626" cx="54" cy="54" r="54"/>
+
+    <!-- Foreground Layer (Wrapper for scaling) -->
+    <!-- transform for pivot(54,54) and scale(0.6) -->
+    <g transform="translate(54 54) scale(0.6) translate(-54 -54)">
+
+        <!-- Document Body and Shadow -->
+        <g>
+            <!-- Shadow -->
+            <path fill="#26000000" d="M29,20 H81 C83.2,20 85,21.8 85,24 V92 C85,94.2 83.2,96 81,96 H29 C26.8,96 25,94.2 25,92 V24 C25,21.8 26.8,20 29,20 Z"/>
+            <!-- Body -->
+            <path fill="#FFFFFF" d="M27,18 H79 C81.2,18 83,19.8 83,22 V90 C83,92.2 81.2,94 79,94 H27 C24.8,94 23,92.2 23,90 V22 C23,19.8 24.8,18 27,18 Z"/>
+        </g>
+
+        <!-- Dog-ear -->
+        <g>
+            <path fill="#B71C1C" d="M65,18 L83,36 L65,36 Z"/>
+            <path fill="#F44336" d="M65,18 L83,18 L83,36 Z"/>
+        </g>
+
+        <!-- 'P' Character -->
+        <!-- transform for translateX(-8), pivot(54,56) and scale(0.8) -->
+        <g transform="translate(-8 0) translate(54 56) scale(0.8) translate(-54 -56)">
+            <path fill="url(#P-Gradient)" d="M42,38 v54 h12 v-22 H70 c8.8,0 16,-7.2 16,-16 c0,-8.8 -7.2,-16 -16,-16 H42 z"/>
+        </g>
+
+    </g>
+</svg>

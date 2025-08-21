@@ -13,7 +13,6 @@ import kotlin.io.path.createDirectory
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
 import kotlin.io.path.isWritable
-import kotlin.io.path.notExists
 import kotlin.io.path.pathString
 import kotlin.random.Random
 
@@ -31,8 +30,9 @@ actual object MuPDF {
         @Suppress("UnsafeDynamicallyLoadedCode")
         System.load(nativeLibraries.absolutePathString())
 
-        if (Context.initNative() < 0)
-            throw RuntimeException("cannot initialize mupdf library")
+        if (Context.initNative() < 0) {
+            throw MupdfInitException("cannot initialize mupdf library")
+        }
         isInitializedSuccessfully = true
     }
 
@@ -41,14 +41,14 @@ actual object MuPDF {
             MuPDF::class.java.getResourceAsStream(
                 MUPDF_PLATFORMS_PROPERTIES_FILENAME
             )
-        if (propertiesInputStream == null) {
-            throw IllegalStateException("Can not find MuPDF platform property file $MUPDF_PLATFORMS_PROPERTIES_FILENAME.")
+        checkNotNull(propertiesInputStream) {
+            "Can not find MuPDF platform property file $MUPDF_PLATFORMS_PROPERTIES_FILENAME."
         }
         val properties = Properties()
         try {
             properties.load(propertiesInputStream)
         } catch (e: Exception) {
-            throw Exception(
+            throw IllegalStateException(
                 "Error loading existing property file $MUPDF_PLATFORMS_PROPERTIES_FILENAME",
                 e
             )
@@ -92,7 +92,7 @@ actual object MuPDF {
                 stringBuilder.append(", ")
             }
             stringBuilder.setLength(stringBuilder.length - 2)
-            throw Exception(stringBuilder.toString())
+            throw IllegalArgumentException(stringBuilder.toString())
         }
     private const val SYSTEM_PROPERTY_TMP = "java.io.tmpdir"
     private const val PROPERTY_BUILD_REF = "build.ref"
@@ -105,14 +105,14 @@ actual object MuPDF {
         val pathInJAR = "/$usedPlatform/"
         val sevenZipJBindingLibProperties = MuPDF::class.java
             .getResourceAsStream(pathInJAR + LIB_PROPERTIES_FILENAME)
-        if (sevenZipJBindingLibProperties == null) {
-            throw Exception("error loading property file '$pathInJAR$LIB_PROPERTIES_FILENAME' from a jar-file 'sevenzipjbinding-<Platform>.jar'. Is the platform jar-file not on the class path?")
+        checkNotNull(sevenZipJBindingLibProperties) {
+            "error loading property file '$pathInJAR$LIB_PROPERTIES_FILENAME' from a jar-file 'sevenzipjbinding-<Platform>.jar'. Is the platform jar-file not on the class path?"
         }
         val properties = Properties()
         try {
             properties.load(sevenZipJBindingLibProperties)
         } catch (e: Exception) {
-            throw Exception(
+            throw IllegalStateException(
                 "error loading property file '$LIB_PROPERTIES_FILENAME' from a jar-file 'sevenzipjbinding-<Platform>.jar'",
                 e
             )
@@ -122,16 +122,16 @@ actual object MuPDF {
 
     private fun createOrVerifyTmpDir(): Path {
         val systemPropertyTmp = System.getProperty(SYSTEM_PROPERTY_TMP)
-        if (systemPropertyTmp == null) {
-            throw Exception("can't determinte tmp directory. Use may use -D$SYSTEM_PROPERTY_TMP=<path to tmp dir> parameter for jvm to fix this.")
+        checkNotNull(systemPropertyTmp) {
+            "can't determinte tmp directory. Use may use -D$SYSTEM_PROPERTY_TMP=<path to tmp dir> parameter for jvm to fix this."
         }
         val tmpDir = Path(systemPropertyTmp)
-        if (tmpDir.notExists() || !tmpDir.isDirectory()) {
-            throw Exception("invalid tmp directory '${tmpDir.pathString}'")
+        check(tmpDir.exists() && tmpDir.isDirectory()) {
+            "invalid tmp directory '${tmpDir.pathString}'"
         }
 
-        if (!tmpDir.isWritable()) {
-            throw Exception("can't create files in '${tmpDir.pathString}'")
+        check(tmpDir.isWritable()) {
+            "can't create files in '${tmpDir.pathString}'"
         }
         return tmpDir
     }
@@ -143,7 +143,7 @@ actual object MuPDF {
             runCatching {
                 tmpSubdir.createDirectory()
             }.onFailure {
-                throw Exception(
+                throw IllegalStateException(
                     "Directory '" + tmpDir.absolutePathString() + "' couldn't be created",
                     it
                 )
@@ -167,19 +167,19 @@ actual object MuPDF {
     ): Path {
         val libName = properties.getProperty(LIB_NAME)
         val libHash = properties.getProperty(LIB_HASH)
-        if (libName == null) {
-            throw Exception("property file '$LIB_PROPERTIES_FILENAME' from 'mupdf.jar' missing property '$LIB_NAME'")
+        checkNotNull(libName) {
+            "property file '$LIB_PROPERTIES_FILENAME' from 'mupdf.jar' missing property '$LIB_NAME'"
         }
-        if (libHash == null) {
-            throw Exception("property file '$LIB_PROPERTIES_FILENAME' from 'mupdf.jar' missing property $LIB_HASH containing the hash for the library '$libName'")
+        checkNotNull(libHash) {
+            "property file '$LIB_PROPERTIES_FILENAME' from 'mupdf.jar' missing property $LIB_HASH containing the hash for the library '$libName'"
         }
         val libTmpFile = tmpDir.resolve(libName)
 
         if (!libTmpFile.exists() || !hashMatched(libTmpFile, libHash)) {
             val libInputStream =
                 MuPDF::class.java.getResourceAsStream("/$usedPlatform/$libName")
-            if (libInputStream == null) {
-                throw Exception("error loading native library '$libName' from a jar-file mupdf.jar'.")
+            checkNotNull(libInputStream) {
+                "error loading native library '$libName' from a jar-file mupdf.jar'."
             }
             copyLibraryToFS(libTmpFile, libInputStream)
         }
@@ -200,7 +200,7 @@ actual object MuPDF {
                 }
             }
         } catch (e: java.lang.Exception) {
-            throw RuntimeException(
+            throw MupdfInitException(
                 "Error initializing MuPDF native library: can't copy native library out of a resource file to the temporary location: '$toLibTmp'",
                 e
             )
@@ -209,11 +209,13 @@ actual object MuPDF {
                 fromLibInputStream.close()
             } catch (e: Exception) {
                 // Ignore errors here
+                println(e.stackTraceToString())
             }
             try {
                 libTmpOutputStream?.close()
             } catch (e: Exception) {
                 // Ignore errors here
+                println(e.stackTraceToString())
             }
         }
     }
@@ -222,7 +224,7 @@ actual object MuPDF {
         val digest = try {
             MessageDigest.getInstance("SHA-256")
         } catch (e: Exception) {
-            throw Exception("Error initializing SHA-256 algorithm", e)
+            throw IllegalStateException("Error initializing SHA-256 algorithm", e)
         }
         var fileInputStream: InputStream? = null
         return try {
@@ -236,12 +238,12 @@ actual object MuPDF {
             val fileHash = digest.digest().toHexString()
             fileHash.equals(libHash.trim { it <= ' ' }.lowercase(), ignoreCase = true)
         } catch (e: Exception) {
-            throw Exception("Error reading library file from the temp directory: '$libTmpFile'", e)
+            throw IllegalStateException("Error reading library file from the temp directory: '$libTmpFile'", e)
         } finally {
             try {
                 fileInputStream?.close()
             } catch (e: Exception) {
-                // 無視
+                println(e.stackTraceToString())
             }
         }
     }
