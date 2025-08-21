@@ -35,7 +35,6 @@ kotlin {
         }
         androidMain {
             dependencies {
-                logger.lifecycle(System.getProperty("os.name"))
                 if (System.getProperty("os.name").lowercase().contains("windows")) {
                     implementation("com.sorrowblue.mupdf:mupdf-kmp:$version")
                 } else {
