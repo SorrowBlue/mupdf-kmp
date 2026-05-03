@@ -2,5 +2,34 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "prHourlyLimit": 0,
+  "schedule": [
+    "before 3am"
+  ],
+  "labels": [
+    "type: :dependabot:dependencies",
+    ":robot:renovate"
+  ],
+  "dependencyDashboardLabels": [
+    ":robot:renovate"
+  ],
+  "packageRules": [
+    {
+      "groupName": "Android Gradle Plugin",
+      "groupSlug": "android_gradle_plugin",
+      "matchPackageNames": [
+        "com.android.{/,}**"
+      ]
+    },
+    {
+      "groupName": "Kotlin",
+      "groupSlug": "kotlin",
+      "matchPackageNames": [
+        "org.jetbrains.kotlin:{/,}**",
+        "org.jetbrains.kotlin.{/,}**",
+        "com.google.devtools.ksp{/,}**"
+      ]
+    }
   ]
 }
