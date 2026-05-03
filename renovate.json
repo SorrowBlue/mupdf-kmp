@@ -16,20 +16,16 @@
   ],
   "packageRules": [
     {
-      "groupName": "Android Gradle Plugin",
-      "groupSlug": "android_gradle_plugin",
+      "groupName": "Kotlin Multiplatform Core Updates",
+      "groupSlug": "Kotlin Multiplatform Core Stack",
       "matchPackageNames": [
-        "com.android.{/,}**"
-      ]
-    },
-    {
-      "groupName": "Kotlin",
-      "groupSlug": "kotlin",
-      "matchPackageNames": [
+        "com.android.{/,}**",
         "org.jetbrains.kotlin:{/,}**",
         "org.jetbrains.kotlin.{/,}**",
         "com.google.devtools.ksp{/,}**"
-      ]
+      ],
+      "matchManagers": ["gradle-wrapper"],
+      "matchPackageNames": ["gradle"],
     }
   ]
 }
