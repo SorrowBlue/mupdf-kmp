@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "prHourlyLimit": 0,
+  "schedule": [
+    "before 3am"
+  ],
+  "labels": [
+    "type: :dependabot:dependencies",
+    ":robot:renovate"
+  ],
+  "dependencyDashboardLabels": [
+    ":robot:renovate"
+  ],
+  "packageRules": [
+    {
+      "groupName": "Kotlin Multiplatform Core Updates",
+      "groupSlug": "Kotlin Multiplatform Core Stack",
+      "matchPackageNames": [
+        "com.android.{/,}**",
+        "org.jetbrains.kotlin:{/,}**",
+        "org.jetbrains.kotlin.{/,}**",
+        "com.google.devtools.ksp{/,}**"
+      ],
+      "matchManagers": ["gradle-wrapper"],
+      "matchPackageNames": ["gradle"],
+    }
+  ]
+}
