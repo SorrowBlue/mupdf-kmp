@@ -18,6 +18,7 @@ internal class GitTagVersionPlugin : Plugin<Project> {
                 val tag = checkNotNull(gitTagProvider.orNull) { "No git tag found." }
                 version =
                     checkNotNull(releaseVersionOrSnapshot(tag.removePrefix("v"))) { "git tag is not valid." }
+                logger.lifecycle("version=$version")
             }.onFailure {
                 logger.warn("Failed to get git tag. Using version 'UNKNOWN'.")
                 version = "0.0.0-SNAPSHOT"

@@ -35,9 +35,17 @@ dependencyResolutionManagement {
     }
 }
 
+android {
+    compileSdk = 37
+    minSdk = 30
+}
+
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+    id("com.android.settings") version "9.2.0"
 }
 
 include(":composeApp")
+include(":androidApp")
 include(":lib")
+include(":lib:android")

@@ -3,7 +3,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.androidMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.mupdfKmp.detekt)
@@ -12,8 +12,10 @@ plugins {
 }
 
 kotlin {
-    androidTarget()
-
+    android {
+        namespace = "com.sorrowblue.mupdf.kmp.shared"
+        androidResources.enable = true
+    }
     jvm("desktop")
 
     jvmToolchain {
@@ -58,44 +60,13 @@ kotlin {
     }
 }
 
-android {
-    namespace = "org.sorrowblue.mupdf.kmp"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-
-    defaultConfig {
-        applicationId = "org.sorrowblue.mupdf.kmp"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-}
-
-dependencies {
-    debugImplementation(compose.uiTooling)
-}
-
 compose.desktop {
     application {
-        mainClass = "org.sorrowblue.mupdf.kmp.MainKt"
+        mainClass = "com.sorrowblue.mupdf.kmp.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.sorrowblue.mupdf.kmp"
+            packageName = "com.sorrowblue.mupdf.kmp"
             packageVersion = "1.0.0"
 
             linux {

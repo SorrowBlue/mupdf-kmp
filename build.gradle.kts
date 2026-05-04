@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidLibrary) apply false
+    alias(libs.plugins.androidMultiplatform) apply false
     alias(libs.plugins.buildkonfig) apply false
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.composeHotReload) apply false

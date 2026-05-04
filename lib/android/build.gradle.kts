@@ -1,66 +1,42 @@
-import com.codingfeline.buildkonfig.compiler.FieldSpec
-
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidMultiplatform)
+    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.mavenPublish)
-    alias(libs.plugins.buildkonfig)
-    alias(libs.plugins.mupdfKmp.muBuild)
     alias(libs.plugins.mupdfKmp.gitTagVersion)
-    alias(libs.plugins.mupdfKmp.detekt)
-    alias(libs.plugins.mupdfKmp.lint)
 }
 
 kotlin {
-    android {
-        namespace = "com.sorrowblue.mupdf.kmp"
-    }
-
-    jvm()
-
     jvmToolchain {
         vendor = JvmVendorSpec.ADOPTIUM
         languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
     }
+}
 
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
-
-    sourceSets {
-        androidMain {
-            dependencies {
-                api(projects.lib.android)
-            }
+android {
+    namespace = "com.sorrowblue.mupdf.kmp.android"
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
         }
     }
-}
+    sourceSets {
+        named("main") {
+            java.directories.add("../../mupdf/platform/java/src")
+        }
 
-java {
-    sourceSets.getByName("jvmMain").java.srcDir("../mupdf/platform/java/src")
-        .exclude("**/android/**")
-}
-
-buildkonfig {
-    packageName = "com.sorrowblue.mupdf.kmp"
-    defaultConfigs {
-        buildConfigField(FieldSpec.Type.STRING, "version", version.toString())
     }
-}
-
-publishing {
-    repositories {
-        mavenLocal()
+    externalNativeBuild {
+        ndkVersion = libs.versions.ndkVersion.get()
+        ndkBuild.path("../../mupdf/platform/java/Android.mk")
     }
 }
 
 mavenPublishing {
     publishToMavenCentral()
 
-    coordinates("com.sorrowblue.mupdf", "mupdf-kmp", version.toString())
+    coordinates("com.sorrowblue.mupdf", "mupdf-android", version.toString())
 
     pom {
-        name = "mupdf-kmp"
+        name = "mupdf-android"
         description = "Use MuPDF with KotlinMultiplatform"
         inceptionYear = "2025"
         url = "https://github.com/SorrowBlue/mupdf-kmp"
@@ -84,8 +60,4 @@ mavenPublishing {
             developerConnection = "scm:git:ssh://git@github.com/SorrowBlue/mupdf-kmp.git"
         }
     }
-}
-
-tasks.withType<JavaCompile> {
-    options.compilerArgs.add("-Xlint:-removal")
 }

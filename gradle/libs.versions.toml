@@ -1,19 +1,19 @@
 [versions]
-android-compileSdk = "36"
-android-gradle = "8.12.1"
+android-compileSdk = "37"
+android-gradle = "9.2.0"
 android-minSdk = "30"
-android-targetSdk = "36"
+android-targetSdk = "37"
 androidx-activity = "1.10.1"
 androidx-appcompat = "1.7.1"
 androidx-constraintlayout = "2.2.1"
 buildkonfig = "0.17.1"
 composeHotReload = "1.0.0-beta05"
-composeMultiplatform = "1.8.2"
+composeMultiplatform = "1.10.3"
 detekt = "1.23.8"
 detekt-compose = "0.4.27"
 filekit = "0.10.0"
 java = "21"
-kotlin = "2.2.10"
+kotlin = "2.3.21"
 kotlinx-coroutines = "1.10.2"
 maven-publish = "0.34.0"
 ndkVersion = "28.1.13356709"
@@ -32,6 +32,7 @@ kotlinx-coroutinesSwing = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "android-gradle" }
 androidLibrary = { id = "com.android.library", version.ref = "android-gradle" }
+androidMultiplatform = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
