@@ -1,6 +1,7 @@
 package com.sorrowblue.mupdf.kmp.task
 
 import java.security.MessageDigest
+import java.util.Locale
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
@@ -24,13 +25,13 @@ internal abstract class GenerateMupdfLibPropertiesTask : DefaultTask() {
     fun generateProperties() {
         val hash = MessageDigest.getInstance("SHA-256")
             .digest(dllFile.get().asFile.readBytes())
-            .joinToString("") { "%02x".format(it) }
+            .joinToString("") { "%02x".format(Locale.getDefault(), it) }
         propsFile.get().asFile.writeText(
             """
             build.ref=${libVersion.get()}
             lib.name=${dllFile.get().asFile.name}
             lib.hash=$hash
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

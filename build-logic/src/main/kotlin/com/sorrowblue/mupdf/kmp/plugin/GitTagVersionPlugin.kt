@@ -17,7 +17,9 @@ internal class GitTagVersionPlugin : Plugin<Project> {
             runCatching {
                 val tag = checkNotNull(gitTagProvider.orNull) { "No git tag found." }
                 version =
-                    checkNotNull(releaseVersionOrSnapshot(tag.removePrefix("v"))) { "git tag is not valid." }
+                    checkNotNull(
+                        releaseVersionOrSnapshot(tag.removePrefix("v")),
+                    ) { "git tag is not valid." }
                 logger.lifecycle("version=$version")
             }.onFailure {
                 logger.warn("Failed to get git tag. Using version 'UNKNOWN'.")
@@ -35,34 +37,32 @@ private abstract class GitTagValueSource @Inject constructor(
     private val execOperations: ExecOperations,
 ) : ValueSource<String, GitTagParameters> {
 
-    override fun obtain(): String {
-        return try {
-            // 標準出力をキャプチャするためのByteArrayOutputStream
-            val stdout = ByteArrayOutputStream()
-            // git describe コマンドを実行
-            val result = execOperations.exec {
-                // commandLine("git", "tag", "--sort=-creatordate") // もし作成日時順の最新タグが良い場合
-                commandLine("git", "describe", "--tags", "--abbrev=1")
-                standardOutput = stdout
-                // エラーが発生してもGradleビルドを止めないようにし、戻り値で判断
-                isIgnoreExitValue = true
-                // エラー出力は捨てる (必要ならキャプチャも可能)
-                errorOutput = ByteArrayOutputStream()
-            }
+    override fun obtain(): String = try {
+        // 標準出力をキャプチャするためのByteArrayOutputStream
+        val stdout = ByteArrayOutputStream()
+        // git describe コマンドを実行
+        val result = execOperations.exec {
+            // commandLine("git", "tag", "--sort=-creatordate") // もし作成日時順の最新タグが良い場合
+            commandLine("git", "describe", "--tags", "--abbrev=1")
+            standardOutput = stdout
+            // エラーが発生してもGradleビルドを止めないようにし、戻り値で判断
+            isIgnoreExitValue = true
+            // エラー出力は捨てる (必要ならキャプチャも可能)
+            errorOutput = ByteArrayOutputStream()
+        }
 
-            if (result.exitValue == 0) {
-                // 成功したら標準出力をトリムして返す
-                stdout.toString().trim().removePrefix("v")
-            } else {
-                // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
-                println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
-                "0.0.0-SNAPSHOT"
-            }
-        } catch (e: Exception) {
-            // その他の予期せぬエラー
-            println("Error: Failed to execute git command: ${e.message}")
+        if (result.exitValue == 0) {
+            // 成功したら標準出力をトリムして返す
+            stdout.toString().trim().removePrefix("v")
+        } else {
+            // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
+            println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
             "0.0.0-SNAPSHOT"
         }
+    } catch (e: Exception) {
+        // その他の予期せぬエラー
+        println("Error: Failed to execute git command: ${e.message}")
+        "0.0.0-SNAPSHOT"
     }
 }
 
@@ -71,9 +71,11 @@ private fun releaseVersionOrSnapshot(tag: String): String? {
     val groups = regex.find(tag)?.groups ?: return null
     return if (groups.size == 4) {
         if (groups[3]?.value?.isEmpty() == true) {
-            groups.first()!!.value
+            requireNotNull(groups.first()).value
         } else {
-            "${groups[1]!!.value}${groups[2]!!.value.toInt().plus(1)}-SNAPSHOT"
+            "${requireNotNull(
+                groups[1]
+            ).value}${requireNotNull(groups[2]).value.toInt().plus(1)}-SNAPSHOT"
         }
     } else {
         null

@@ -22,7 +22,7 @@ internal abstract class AddUft8BomToFilesTask : DefaultTask() {
                 inputFile.toPath(),
                 bom + content,
                 StandardOpenOption.WRITE,
-                StandardOpenOption.TRUNCATE_EXISTING
+                StandardOpenOption.TRUNCATE_EXISTING,
             )
         }
     }

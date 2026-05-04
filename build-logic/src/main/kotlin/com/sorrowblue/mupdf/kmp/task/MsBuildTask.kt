@@ -28,7 +28,7 @@ internal abstract class MsBuildTask : Exec() {
             "MsBuild.exe",
             projectName.get(),
             "/p:configuration=${configuration.get()}",
-            "/p:platform=${platform.get()}"
+            "/p:platform=${platform.get()}",
         )
     }
 }

@@ -43,7 +43,11 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 }
                 exclude {
                     it.file.path.run {
-                        contains("generated") || contains("buildkonfig") || contains("mupdf\\platform") || contains("mupdf/platform")
+                        contains(
+                            "generated",
+                        ) || contains(
+                            "buildkonfig",
+                        ) || contains("mupdf\\platform") || contains("mupdf/platform")
                     }.also { exclude ->
                         if (exclude) {
                             logger.lifecycle("exclude path ${it.file.path}")
