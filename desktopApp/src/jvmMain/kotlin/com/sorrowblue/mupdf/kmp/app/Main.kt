@@ -1,4 +1,4 @@
-package com.sorrowblue.mupdf.kmp
+package com.sorrowblue.mupdf.kmp.app
 
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect

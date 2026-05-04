@@ -81,7 +81,7 @@ jobs:
         uses: ./.github/actions/setup-java-gradle
 
       - name: 🚀 Run publish
-        run: ./gradlew :lib:publishAndReleaseToMavenCentral --no-configuration-cache
+        run: ./gradlew :lib:android:publishAndReleaseToMavenCentral :lib:publishAndReleaseToMavenCentral --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
@@ -111,7 +111,7 @@ jobs:
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🚀 Run publish snapshot
-        run: ./gradlew :lib:publishAllPublicationsToMavenCentralRepository --no-configuration-cache
+        run: ./gradlew :lib:android:publishMavenPublicationToMavenCentralRepository :lib:publishAllPublicationsToMavenCentralRepository --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}

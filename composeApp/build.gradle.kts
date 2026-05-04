@@ -16,7 +16,7 @@ kotlin {
         namespace = "com.sorrowblue.mupdf.kmp.shared"
         androidResources.enable = true
     }
-    jvm("desktop")
+    jvm()
 
     jvmToolchain {
         vendor = JvmVendorSpec.ADOPTIUM
@@ -26,12 +26,11 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material3)
-                implementation(compose.ui)
-                implementation(compose.components.resources)
-                implementation(compose.components.uiToolingPreview)
+                implementation(libs.compose.runtime)
+                implementation(libs.compose.material3)
+                implementation(libs.compose.ui)
+                implementation(libs.compose.componentsResources)
+                implementation(libs.compose.preview)
                 implementation(libs.filekit.dialogsCompose)
             }
         }
@@ -42,14 +41,12 @@ kotlin {
                 } else {
                     implementation(projects.lib)
                 }
-                implementation(compose.preview)
                 implementation(libs.androidx.activity.compose)
             }
         }
-        getByName("desktopMain") {
+        jvmMain {
             dependencies {
                 implementation(projects.lib)
-                implementation(compose.desktop.currentOs)
                 implementation(libs.kotlinx.coroutinesSwing)
             }
         }
@@ -60,18 +57,6 @@ kotlin {
     }
 }
 
-compose.desktop {
-    application {
-        mainClass = "com.sorrowblue.mupdf.kmp.MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.sorrowblue.mupdf.kmp"
-            packageVersion = "1.0.0"
-
-            linux {
-                modules("jdk.security.auth")
-            }
-        }
-    }
+dependencies {
+    androidRuntimeClasspath(libs.compose.uiTooling)
 }
