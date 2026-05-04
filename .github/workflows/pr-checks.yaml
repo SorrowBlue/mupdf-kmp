@@ -61,8 +61,10 @@ jobs:
     permissions:
       checks: read
       contents: read
-    needs: check-commit
+    needs: build
     if: needs.check-commit.outputs.should-run == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: wechuli/allcheckspassed@v2
+        with:
+          poll: false
