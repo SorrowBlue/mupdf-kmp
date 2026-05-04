@@ -18,12 +18,12 @@ jobs:
       - name: Run assembleDebug
         run: ./gradlew assembleDebug
       - name: Upload lib
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mupdf-kmp-android
           path: ~/.m2/repository/
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: composeApp-debug.apk
           path: composeApp/build/outputs/apk/debug/
@@ -42,7 +42,7 @@ jobs:
       - name: Run buildJavaviewerlib
         run: ./gradlew :lib:addUtf8BomToFiles :lib:desktopResourceWindowsX86 :lib:desktopResourceWindowsAMD64
       - name: Upload Windows library
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows
           path: lib/src/jvmMain/resources/
@@ -64,7 +64,7 @@ jobs:
       - name: Run buildJavaviewerlib
         run: ./gradlew :lib:desktopResourceLinuxAMD64
       - name: Upload Linux library
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: linux
           path: lib/src/jvmMain/resources/
@@ -84,13 +84,13 @@ jobs:
         with:
           submodules: recursive
       - name: Download Windows Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: windows
           path: lib/src/jvmMain/resources/
           merge-multiple: true
       - name: Download Linux Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: linux
           path: lib/src/jvmMain/resources/
@@ -102,12 +102,12 @@ jobs:
       - name: Run packageDistributionForCurrentOS
         run: ./gradlew :composeApp:packageDistributionForCurrentOS
       - name: Upload lib
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mupdf-kmp-jvm-${{ runner.os }}
           path: ~/.m2/repository/
       - name: Upload Desktop Binaries
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: desktop-${{ runner.os }}
           path: composeApp/build/compose/binaries/main/
