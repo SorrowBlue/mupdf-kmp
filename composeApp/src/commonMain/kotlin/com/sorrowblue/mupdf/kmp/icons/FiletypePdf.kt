@@ -1,3 +1,5 @@
+@file:Suppress("detekt.all")
+
 package com.sorrowblue.mupdf.kmp.icons
 
 import androidx.compose.ui.graphics.Color

@@ -39,7 +39,7 @@ actual object MuPDF {
     val platformList: List<String> by lazy {
         val propertiesInputStream =
             MuPDF::class.java.getResourceAsStream(
-                MUPDF_PLATFORMS_PROPERTIES_FILENAME
+                MUPDF_PLATFORMS_PROPERTIES_FILENAME,
             )
         checkNotNull(propertiesInputStream) {
             "Can not find MuPDF platform property file $MUPDF_PLATFORMS_PROPERTIES_FILENAME."
@@ -50,7 +50,7 @@ actual object MuPDF {
         } catch (e: Exception) {
             throw IllegalStateException(
                 "Error loading existing property file $MUPDF_PLATFORMS_PROPERTIES_FILENAME",
-                e
+                e,
             )
         }
         properties.mapNotNull { (key, value) ->
@@ -114,7 +114,7 @@ actual object MuPDF {
         } catch (e: Exception) {
             throw IllegalStateException(
                 "error loading property file '$LIB_PROPERTIES_FILENAME' from a jar-file 'sevenzipjbinding-<Platform>.jar'",
-                e
+                e,
             )
         }
         return properties
@@ -145,7 +145,7 @@ actual object MuPDF {
             }.onFailure {
                 throw IllegalStateException(
                     "Directory '" + tmpDir.absolutePathString() + "' couldn't be created",
-                    it
+                    it,
                 )
             }
         }
@@ -202,7 +202,7 @@ actual object MuPDF {
         } catch (e: java.lang.Exception) {
             throw MupdfInitException(
                 "Error initializing MuPDF native library: can't copy native library out of a resource file to the temporary location: '$toLibTmp'",
-                e
+                e,
             )
         } finally {
             try {
@@ -238,7 +238,10 @@ actual object MuPDF {
             val fileHash = digest.digest().toHexString()
             fileHash.equals(libHash.trim { it <= ' ' }.lowercase(), ignoreCase = true)
         } catch (e: Exception) {
-            throw IllegalStateException("Error reading library file from the temp directory: '$libTmpFile'", e)
+            throw IllegalStateException(
+                "Error reading library file from the temp directory: '$libTmpFile'",
+                e,
+            )
         } finally {
             try {
                 fileInputStream?.close()

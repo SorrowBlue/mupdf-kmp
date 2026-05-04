@@ -9,8 +9,8 @@ androidx-constraintlayout = "2.2.1"
 buildkonfig = "0.17.1"
 composeHotReload = "1.0.0-beta05"
 composeMultiplatform = "1.10.3"
-detekt = "1.23.8"
-detekt-compose = "0.4.27"
+detekt = "2.0.0-alpha.3"
+detekt-compose = "0.5.8"
 filekit = "0.10.0"
 java = "21"
 kotlin = "2.3.21"
@@ -23,8 +23,8 @@ versionCatalogLinter = "1.1.0"
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
 detekt-compose = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "detekt-compose" }
-detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
-detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+detekt-gradlePlugin = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+detekt-ktlintWrapper = { group = "dev.detekt", name = "detekt-rules-ktlint-wrapper", version.ref = "detekt" }
 filekit-dialogsCompose = { group = "io.github.vinceglb", name = "filekit-dialogs-compose", version.ref = "filekit" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-coroutinesSwing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
@@ -37,7 +37,7 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig"
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 mavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
 mupdfKmp-detekt = { id = "com.sorrowblue.mupdf.kmp.plugin.detekt" }

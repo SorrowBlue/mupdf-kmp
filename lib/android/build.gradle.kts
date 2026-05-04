@@ -1,7 +1,9 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.mavenPublish)
+    alias(libs.plugins.mupdfKmp.detekt)
     alias(libs.plugins.mupdfKmp.gitTagVersion)
+    alias(libs.plugins.mupdfKmp.lint)
 }
 
 kotlin {
@@ -22,11 +24,13 @@ android {
         named("main") {
             java.directories.add("../../mupdf/platform/java/src")
         }
-
     }
     externalNativeBuild {
         ndkVersion = libs.versions.ndkVersion.get()
         ndkBuild.path("../../mupdf/platform/java/Android.mk")
+    }
+    lint {
+        lintConfig = file("lint.xml")
     }
 }
 

@@ -7,9 +7,7 @@ import java.awt.Desktop
 import java.io.File
 
 @Composable
-actual fun rememberPlatformDirectory(): PlatformDirectory {
-    return remember { PlatformDirectory() }
-}
+actual fun rememberPlatformDirectory(): PlatformDirectory = remember { PlatformDirectory() }
 
 actual class PlatformDirectory {
     actual fun openDirectory(path: String, error: (String) -> Unit) {

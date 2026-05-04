@@ -13,8 +13,8 @@ jobs:
           submodules: recursive
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
-      - name: Run publishAndroidReleasePublicationToMavenLocal
-        run: ./gradlew :lib:publishAndroidReleasePublicationToMavenLocal
+      - name: Run publishAndroidPublicationToMavenLocal
+        run: ./gradlew :lib:publishAndroidPublicationToMavenLocal
       - name: Run assembleDebug
         run: ./gradlew assembleDebug
       - name: Upload lib

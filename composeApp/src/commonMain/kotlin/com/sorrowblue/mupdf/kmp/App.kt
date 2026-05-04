@@ -26,8 +26,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import com.sorrowblue.mupdf.kmp.icons.FilePdf
+import kotlinx.coroutines.launch
 
 @Composable
 fun App(modifier: Modifier = Modifier) {
@@ -43,7 +43,7 @@ fun App(modifier: Modifier = Modifier) {
             ) {
                 Text(
                     "PDFのページを画像ファイルとして保存します",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
 
                 Spacer(Modifier.size(8.dp))
@@ -58,17 +58,17 @@ fun App(modifier: Modifier = Modifier) {
                         text = state.uiState.output,
                         style = TextStyle(
                             color = Color.Blue,
-                            textDecoration = TextDecoration.Underline
+                            textDecoration = TextDecoration.Underline,
                         ),
                         modifier = Modifier.clickable {
                             state.openDirectory()
-                        }
+                        },
                     )
                 }
                 val scrollState = rememberScrollState()
                 Text(
                     text = state.uiState.log,
-                    modifier = Modifier.verticalScroll(scrollState)
+                    modifier = Modifier.verticalScroll(scrollState),
                 )
                 val coroutineScope = rememberCoroutineScope()
                 LaunchedEffect(state.uiState.log) {
@@ -82,7 +82,7 @@ fun App(modifier: Modifier = Modifier) {
                     modifier = Modifier.fillMaxSize()
                         .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f))
                         .clickable(false) {},
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator()
                 }
@@ -91,8 +91,4 @@ fun App(modifier: Modifier = Modifier) {
     }
 }
 
-data class AppUiState(
-    val running: Boolean = false,
-    val log: String = "",
-    val output: String = "",
-)
+data class AppUiState(val running: Boolean = false, val log: String = "", val output: String = "")

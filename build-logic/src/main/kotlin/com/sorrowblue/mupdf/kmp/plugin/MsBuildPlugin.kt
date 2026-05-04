@@ -35,8 +35,16 @@ internal class MsBuildPlugin : Plugin<Project> {
             tasks.register<GenerateMupdfLibPropertiesTask>("generateMupdfLibPropertiesWindowsX86") {
                 mustRunAfter("copyJavaviewerlibDll")
                 libVersion.set(version.toString())
-                dllFile.set(layout.projectDirectory.file("src/jvmMain/resources/Windows-x84/mupdf_java.dll"))
-                propsFile.set(layout.projectDirectory.file("src/jvmMain/resources/Windows-x84/mupdf-lib.properties"))
+                dllFile.set(
+                    layout.projectDirectory.file(
+                        "src/jvmMain/resources/Windows-x84/mupdf_java.dll"
+                    ),
+                )
+                propsFile.set(
+                    layout.projectDirectory.file(
+                        "src/jvmMain/resources/Windows-x84/mupdf-lib.properties",
+                    ),
+                )
             }
             tasks.register("desktopResourceWindowsX86") {
                 group = "build"
@@ -44,7 +52,7 @@ internal class MsBuildPlugin : Plugin<Project> {
                 dependsOn(
                     "buildJavaviewerlibWindowsX86",
                     "copyJavaviewerlibDll",
-                    "generateMupdfLibPropertiesWindowsX86"
+                    "generateMupdfLibPropertiesWindowsX86",
                 )
             }
 
@@ -66,11 +74,21 @@ internal class MsBuildPlugin : Plugin<Project> {
                 rename { "mupdf_java.dll" }
                 duplicatesStrategy = DuplicatesStrategy.INCLUDE
             }
-            tasks.register<GenerateMupdfLibPropertiesTask>("generateMupdfLibPropertiesWindowsAMD64") {
+            tasks.register<GenerateMupdfLibPropertiesTask>(
+                "generateMupdfLibPropertiesWindowsAMD64",
+            ) {
                 mustRunAfter("copyJavaviewerlib64Dll")
                 libVersion.set(version.toString())
-                dllFile.set(layout.projectDirectory.file("src/jvmMain/resources/Windows-amd64/mupdf_java.dll"))
-                propsFile.set(layout.projectDirectory.file("src/jvmMain/resources/Windows-amd64/mupdf-lib.properties"))
+                dllFile.set(
+                    layout.projectDirectory.file(
+                        "src/jvmMain/resources/Windows-amd64/mupdf_java.dll",
+                    ),
+                )
+                propsFile.set(
+                    layout.projectDirectory.file(
+                        "src/jvmMain/resources/Windows-amd64/mupdf-lib.properties",
+                    ),
+                )
             }
             tasks.register("desktopResourceWindowsAMD64") {
                 group = "build"
@@ -78,7 +96,7 @@ internal class MsBuildPlugin : Plugin<Project> {
                 dependsOn(
                     "buildJavaviewerlibWindowsAMD64",
                     "copyJavaviewerlib64Dll",
-                    "generateMupdfLibPropertiesWindowsAMD64"
+                    "generateMupdfLibPropertiesWindowsAMD64",
                 )
             }
 
@@ -87,7 +105,7 @@ internal class MsBuildPlugin : Plugin<Project> {
                 description = "Overwrite and save multiple UTF-8 BOM-free files with UTF-8 BOM."
                 inputFiles.setFrom(
                     file("../mupdf/thirdparty/zxing-cpp/core/src/BitMatrixIO.cpp"),
-                    file("../mupdf/thirdparty/zxing-cpp/core/src/WriteBarcode.cpp")
+                    file("../mupdf/thirdparty/zxing-cpp/core/src/WriteBarcode.cpp"),
                 )
             }
 
@@ -110,8 +128,14 @@ internal class MsBuildPlugin : Plugin<Project> {
             tasks.register<GenerateMupdfLibPropertiesTask>("generateMupdfLibPropertiesLinuxAMD64") {
                 mustRunAfter("copyLibmupdfJava64So")
                 libVersion.set(version.toString())
-                dllFile.set(layout.projectDirectory.file("src/jvmMain/resources/Linux-amd64/mupdf_java.so"))
-                propsFile.set(layout.projectDirectory.file("src/jvmMain/resources/Linux-amd64/mupdf-lib.properties"))
+                dllFile.set(
+                    layout.projectDirectory.file("src/jvmMain/resources/Linux-amd64/mupdf_java.so"),
+                )
+                propsFile.set(
+                    layout.projectDirectory.file(
+                        "src/jvmMain/resources/Linux-amd64/mupdf-lib.properties",
+                    ),
+                )
             }
             tasks.register("desktopResourceLinuxAMD64") {
                 group = "build"
@@ -119,7 +143,7 @@ internal class MsBuildPlugin : Plugin<Project> {
                 dependsOn(
                     "buildLibmupdfLinuxAMD64",
                     "copyLibmupdfJava64So",
-                    "generateMupdfLibPropertiesLinuxAMD64"
+                    "generateMupdfLibPropertiesLinuxAMD64",
                 )
             }
         }

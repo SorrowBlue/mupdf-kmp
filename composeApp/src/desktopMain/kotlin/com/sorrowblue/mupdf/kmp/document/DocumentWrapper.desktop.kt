@@ -14,11 +14,7 @@ actual object DocumentWrapper {
         document = Document.openDocument(platformFile.absolutePath())
     }
 
-    actual fun loadPage(index: Int): PageWrapper {
-        return PageWrapper(document.loadPage(index))
-    }
+    actual fun loadPage(index: Int): PageWrapper = PageWrapper(document.loadPage(index))
 
-    actual fun countPage(): Int {
-        return document.countPages()
-    }
+    actual fun countPage(): Int = document.countPages()
 }

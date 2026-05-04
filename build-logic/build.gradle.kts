@@ -1,4 +1,4 @@
-import io.gitlab.arturbosch.detekt.Detekt
+import dev.detekt.gradle.Detekt
 import org.gradle.kotlin.dsl.withType
 
 plugins {
@@ -28,28 +28,27 @@ dependencies {
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.detekt.gradlePlugin)
     detektPlugins(libs.detekt.compose)
-    detektPlugins(libs.detekt.formatting)
+    detektPlugins(libs.detekt.ktlintWrapper)
 }
 
 detekt {
     buildUponDefaultConfig = true
-    autoCorrect = true
     config.setFrom(layout.projectDirectory.file("../config/detekt/detekt.yml"))
+    basePath.set(projectDir)
+    autoCorrect = true
+    parallel = true
 }
 
 tasks.withType<Detekt>().configureEach {
     reports {
         html.required.set(false)
-        md.required.set(false)
+        markdown.required.set(false)
         sarif.required.set(true)
-        txt.required.set(false)
-        xml.required.set(false)
+        checkstyle.required.set(false)
     }
-}
-
-tasks.register("detektAll") {
-    group = "verification"
-    dependsOn(tasks.withType<Detekt>())
+    exclude {
+        it.file.path.run { contains("generated-sources") }
+    }
 }
 
 gradlePlugin {

@@ -17,7 +17,11 @@ actual object MuPDF {
                     System.loadLibrary("mupdf_java32")
                 }
             }
-            if (Context.initNative() < 0) throw MupdfInitException("cannot initialize mupdf library")
+            if (Context.initNative() < 0) {
+                throw MupdfInitException(
+                    "cannot initialize mupdf library",
+                )
+            }
         }
     }
 }

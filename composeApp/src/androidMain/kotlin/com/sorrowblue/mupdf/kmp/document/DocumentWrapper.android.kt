@@ -25,37 +25,35 @@ actual object DocumentWrapper {
         document = Document.openDocument(stream, "pdf")
     }
 
-    actual fun loadPage(index: Int): PageWrapper {
-        return PageWrapper(document.loadPage(index))
-    }
+    actual fun loadPage(index: Int): PageWrapper = PageWrapper(document.loadPage(index))
 
-    actual fun countPage(): Int {
-        return document.countPages()
-    }
+    actual fun countPage(): Int = document.countPages()
 }
 
-private class DeviceSeekableInputStream(context: Context, uri: Uri) : SeekableInputStream, AutoCloseable {
+private class DeviceSeekableInputStream(context: Context, uri: Uri) :
+    SeekableInputStream,
+    AutoCloseable {
 
     private val input = ParcelFileDescriptor.AutoCloseInputStream(
-        context.contentResolver.openFileDescriptor(uri, "r")
+        context.contentResolver.openFileDescriptor(uri, "r"),
     )
 
     override fun seek(offset: Long, whence: Int): Long {
         when (whence) {
             SeekableInputStream.SEEK_SET -> input.channel.position(offset)
-            SeekableInputStream.SEEK_CUR -> input.channel.position(input.channel.position() + offset)
+
+            SeekableInputStream.SEEK_CUR -> input.channel.position(
+                input.channel.position() + offset,
+            )
+
             SeekableInputStream.SEEK_END -> input.channel.position(input.channel.size() + offset)
         }
         return input.channel.position()
     }
 
-    override fun position(): Long {
-        return input.channel.position()
-    }
+    override fun position(): Long = input.channel.position()
 
-    override fun read(buf: ByteArray): Int {
-        return input.read(buf)
-    }
+    override fun read(buf: ByteArray): Int = input.read(buf)
 
     override fun close() {
         input.close()

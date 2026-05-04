@@ -1,7 +1,5 @@
 name: PR Checks
 
-description: 'PRのマージ前にDetekt, AndroidLint, ビルド検証, GitHub Code Scanningを自動実行し、PRチェックとして表示するワークフロー'
-
 on:
   workflow_dispatch:
   push:
@@ -41,19 +39,32 @@ jobs:
           fi
 
   static-code-analysis:
-    needs: check-commit
     name: Static code analysis
+    needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/static-code-analysis.yml
 
   android-lint:
+    name: Android lint
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
-    name: Android lint
     uses: ./.github/workflows/lint.yml
 
   build:
-    needs: [check-commit, static-code-analysis, android-lint]
-    if: needs.check-commit.outputs.should-run == 'true'
     name: Build Validation
+    needs: [static-code-analysis, android-lint]
+    if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/build.yml
+
+  allchecks:
+    name: All Checks Passed
+    permissions:
+      checks: read
+      contents: read
+    needs: build
+    if: needs.check-commit.outputs.should-run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: wechuli/allcheckspassed@v2
+        with:
+          poll: false
