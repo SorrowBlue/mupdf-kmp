@@ -6,6 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.sorrowblue.mupdf.kmp.document.DocumentWrapper
+import com.sorrowblue.mupdf.kmp.document.LocalPlatformContext
+import com.sorrowblue.mupdf.kmp.document.PlatformContext
+import com.sorrowblue.mupdf.kmp.document.PlatformDirectory
+import com.sorrowblue.mupdf.kmp.document.rememberPlatformDirectory
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.PickerResultLauncher
@@ -18,11 +23,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.sorrowblue.mupdf.kmp.document.DocumentWrapper
-import com.sorrowblue.mupdf.kmp.document.LocalPlatformContext
-import com.sorrowblue.mupdf.kmp.document.PlatformContext
-import com.sorrowblue.mupdf.kmp.document.PlatformDirectory
-import com.sorrowblue.mupdf.kmp.document.rememberPlatformDirectory
 
 interface AppState {
 
@@ -65,7 +65,7 @@ private class AppStateImpl(
         uiState = uiState.copy(
             running = true,
             log = "",
-            output = ""
+            output = "",
         )
     }
 
@@ -116,7 +116,7 @@ private class AppStateImpl(
             log = """
                 ${uiState.log}
                 $text
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

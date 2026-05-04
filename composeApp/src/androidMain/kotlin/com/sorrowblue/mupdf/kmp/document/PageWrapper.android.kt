@@ -13,13 +13,13 @@ actual class PageWrapper(private val page: Page) {
         val directoryUri = platformFile.uri
         val docTreeUri = DocumentsContract.buildDocumentUriUsingTree(
             directoryUri,
-            DocumentsContract.getTreeDocumentId(directoryUri)
+            DocumentsContract.getTreeDocumentId(directoryUri),
         )
         val newFileUri = DocumentsContract.createDocument(
             platformContext.contentResolver,
             docTreeUri,
             "image/jpeg",
-            "page_$index.jpg"
+            "page_$index.jpg",
         )
         newFileUri?.let {
             platformContext.contentResolver.openOutputStream(it)?.use { outputStream ->

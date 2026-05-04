@@ -1,3 +1,37 @@
+config:
+  validation: true
+  warningsAsErrors: false
+  checkExhaustiveness: false
+  # when writing own rules with new properties, exclude the property path e.g.: ['my_rule_set', '.*>.*>[my_property]']
+  excludes: [ ]
+
+processors:
+  active: true
+  exclude:
+    - 'DetektProgressListener'
+  # - 'KtFileCountProcessor'
+  # - 'PackageCountProcessor'
+  # - 'ClassCountProcessor'
+  # - 'FunctionCountProcessor'
+  # - 'PropertyCountProcessor'
+  # - 'ProjectComplexityProcessor'
+  # - 'ProjectCognitiveComplexityProcessor'
+  # - 'ProjectLLOCProcessor'
+  # - 'ProjectCLOCProcessor'
+  # - 'ProjectLOCProcessor'
+  # - 'ProjectSLOCProcessor'
+  # - 'LicenseHeaderLoaderExtension'
+
+console-reports:
+  active: true
+  exclude:
+    - 'ProjectStatisticsReport'
+    - 'ComplexityReport'
+    - 'NotificationReport'
+    - 'IssuesReport'
+    - 'FileBasedIssuesReport'
+  #  - 'LiteIssuesReport'
+
 comments:
   active: true
 
@@ -6,6 +40,8 @@ complexity:
 
 coroutines:
   active: true
+  InjectDispatcher:
+    active: false
 
 empty-blocks:
   active: true
@@ -15,34 +51,25 @@ exceptions:
   TooGenericExceptionCaught:
     active: false
 
-formatting:
-  active: true
-  ImportOrdering:
-    active: true
-    layout: '*,^'
-  TrailingCommaOnDeclarationSite:
-    active: true
-  MaximumLineLength:
-    active: false
-
 naming:
   active: true
+  # Configuration for Compose
   FunctionNaming:
-    ignoreAnnotated:
-      - 'Composable'
+    active: true
+    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
+  # Configuration for Compose
   TopLevelPropertyNaming:
-    constantPattern: '[A-Z][A-Za-z0-9_]*'
-
+    active: true
+    constantPattern: '[A-Z][_A-Za-z0-9]*'
   MatchingDeclarationName:
-    active: false
+    active: true
+    multiplatformTargets: [ 'android','jvm','desktop' ]
 
 performance:
   active: true
 
 potential-bugs:
   active: true
-  UnsafeCallOnNullableType:
-    active: false
 
 style:
   active: true
@@ -52,61 +79,78 @@ style:
     active: false
   ReturnCount:
     active: false
-  UnusedPrivateMember:
-    ignoreAnnotated:
-      - 'Preview'
-      - 'PreviewMultiScreen'
-      - 'PreviewLightDark'
-      - 'PreviewMultiScreenFixedWidth'
-      - 'PreviewMultiScreenDarkFixedWidth'
+  UnusedPrivateFunction:
+    active: true
+    ignoreAnnotated: [ 'Preview', 'Provides', 'PreviewMultiplatform' ]
+  UnusedPrivateProperty:
+    active: false # TODO バグ？
+    allowedNames: 'ignored|expected|serialVersionUID|bind'
 
 # https://mrmans0n.github.io/compose-rules/detekt/
 Compose:
+  ComposableAnnotationNaming:
+    active: true
+  ComposableNaming:
+    active: true
+  ComposableParamOrder:
+    active: true
   CompositionLocalAllowlist:
     active: true
-    allowedCompositionLocals:
-      - 'LocalPlatformContext'
-    # You can optionally define a list of CompositionLocals that are allowed here
-    # allowedCompositionLocals: LocalSomething,LocalSomethingElse
+    allowedCompositionLocals: [
+      'LocalAppLocaleIsoInternal',
+      'LocalAppState',
+      'LocalComposeEffectErrorHandler',
+      'LocalDimension',
+      'LocalNavigationItems',
+      'LocalNavigator',
+      'LocalPlatformContext',
+      'LocalSharedTransitionScope',
+    ]
+  CompositionLocalNaming:
+    active: true
   ContentEmitterReturningValues:
     active: true
-    # You can optionally add your own composables here
-    # contentEmitters: MyComposable,MyOtherComposable
+  ContentTrailingLambda:
+    active: true
+  ContentSlotReused:
+    active: true
   DefaultsVisibility:
     active: true
+  LambdaParameterEventTrailing:
+    active: true
+  LambdaParameterInRestartableEffect:
+    active: true
+  Material2:
+    active: true # Opt-in, disabled by default. Turn on if you want to disallow Material 2 usages.
   ModifierClickableOrder:
     active: true
-  ModifierComposable:
+  ModifierComposed:
     active: true
   ModifierMissing:
     active: true
-    # You can optionally control the visibility of which composables to check for here
-    # Possible values are: `only_public`, `public_and_internal` and `all` (default is `only_public`)
-    # checkModifiersForVisibility: only_public
   ModifierNaming:
     active: true
   ModifierNotUsedAtRoot:
     active: true
-    # You can optionally add your own composables here
-    # contentEmitters: MyComposable,MyOtherComposable
   ModifierReused:
     active: true
   ModifierWithoutDefault:
     active: true
   MultipleEmitters:
     active: true
-    # You can optionally add your own composables here
-    # contentEmitters: MyComposable,MyOtherComposable
   MutableParams:
     active: true
-  ComposableNaming:
+  MutableStateAutoboxing:
     active: true
-    # You can optionally disable the checks in this rule for regex matches against the composable name (e.g. molecule presenters)
-    # allowedComposableFunctionNames: .*Presenter,.*MoleculePresenter
-  ComposableParamOrder:
+  MutableStateParam:
+    active: true
+  ParameterNaming:
     active: true
   PreviewAnnotationNaming:
     active: true
+  PreviewNaming:
+    active: true
+    previewNamingStrategy: suffix
   PreviewPublic:
     active: true
   RememberMissing:
@@ -117,12 +161,22 @@ Compose:
     active: false
   ViewModelForwarding:
     active: true
-    allowedStateHolderNames:
-      - '.*ScreenState'
-      - '.*ScreenStateImpl'
-    # You can optionally use this rule on things other than types ending in "ViewModel" or "Presenter" (which are the defaults). You can add your own via a regex here:
-    # allowedStateHolderNames: .*ViewModel,.*Presenter
   ViewModelInjection:
     active: true
-    # You can optionally add your own ViewModel factories here
-    # viewModelFactories: hiltViewModel,potatoViewModel
+
+ktlint:
+  active: true
+  code_style: 'android_studio'
+  autoCorrect: true
+  MaximumLineLength:
+    # See [style.MaxLineLength]
+    active: false
+  PropertyName:
+    # See [naming.PropertyName]
+    active: false
+  TrailingCommaOnCallSite:
+    active: true
+    useTrailingCommaOnCallSite: true
+  TrailingCommaOnDeclarationSite:
+    active: true
+    useTrailingCommaOnDeclarationSite: true
