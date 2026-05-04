@@ -28,7 +28,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         if: ${{ !cancelled() && matrix.task == ':build-logic:detektMain' }}
         with:
-          sarif_file: build-logic/build/reports/detekt/detekt.sarif
+          sarif_file: build-logic/build/reports/detekt/main.sarif
           category: detekt
 
   checkVersionCatalog:
