@@ -36,6 +36,8 @@ abstract class GitTagValueSource @Inject constructor(
         val stderr = ByteArrayOutputStream()
         // git describe コマンドを実行
         val result = execOperations.exec {
+            println(rootProject.projectDir)
+            workingDir = rootProject.projectDir
             // commandLine("git", "tag", "--sort=-creatordate") // もし作成日時順の最新タグが良い場合
             commandLine("git", "describe", "--tags", "--abbrev=1", "--always")
             standardOutput = stdout
