@@ -2,16 +2,25 @@ package primitive
 
 import java.io.ByteArrayOutputStream
 
-val gitTagProvider = providers.of(GitTagValueSource::class) {}
-val tag = checkNotNull(gitTagProvider.orNull) { "No git tag found." }
-version = checkNotNull(formatVersion(tag)) { "git tag is not valid." }
+
+afterEvaluate {
+    runCatching {
+        logger.lifecycle("start")
+        val gitTagProvider = providers.of(GitTagValueSource::class) {}
+        logger.lifecycle("gitTagProvider $gitTagProvider")
+        val tag = checkNotNull(gitTagProvider.orNull) { "No git tag found." }
+        version = checkNotNull(formatVersion(tag)) { "git tag is not valid." }
+    }.onFailure {
+        logger.lifecycle(it.message)
+    }
+}
+
+interface GitTagParameters : ValueSourceParameters
 
 // Gitコマンドを実行して最新タグを取得するValueSource
 abstract class GitTagValueSource @Inject constructor(
     private val execOperations: ExecOperations,
-) : ValueSource<String, GitTagValueSource.Params> {
-
-    interface Params : ValueSourceParameters
+) : ValueSource<String, GitTagParameters> {
 
     override fun obtain(): String = try {
         // 標準出力をキャプチャするためのByteArrayOutputStream
@@ -20,7 +29,7 @@ abstract class GitTagValueSource @Inject constructor(
         // git describe コマンドを実行
         val result = execOperations.exec {
             // commandLine("git", "tag", "--sort=-creatordate") // もし作成日時順の最新タグが良い場合
-            commandLine("git", "describe", "--tags", "--abbrev=1")
+            commandLine("git", "describe", "--tags", "--abbrev=1", "--always")
             standardOutput = stdout
             // エラーが発生してもGradleビルドを止めないようにし、戻り値で判断
             errorOutput = stderr
@@ -30,7 +39,7 @@ abstract class GitTagValueSource @Inject constructor(
 
         if (result.exitValue == 0) {
             // 成功したら標準出力をトリムして返す
-            logger.lifecycle("stdout=$stdout")
+            println("stdout=$stdout")
             stdout.toString().trim()
         } else {
             // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
@@ -45,7 +54,7 @@ abstract class GitTagValueSource @Inject constructor(
     }
 }
 
-private fun formatVersion(input: String): String {
+fun formatVersion(input: String): String {
     if (input.isEmpty()) return ""
 
     // git describe の形式 (タグ)-(コミット数)-g(ハッシュ) に一致するか確認
