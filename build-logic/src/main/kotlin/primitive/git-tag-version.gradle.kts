@@ -54,18 +54,33 @@ abstract class GitTagValueSource @Inject constructor(
 
         if (result.exitValue == 0) {
             // 成功したら標準出力をトリムして返す
+            println("stdout.toString() ${stdout}")
             stdout.toString().trim().removePrefix("v")
         } else {
-            println("--- Git Debug Info ---")
-            // タグが一つでも見えているか確認
-            val tagCheck = java.io.ByteArrayOutputStream()
+
+            val currentDir = parameters.gitRoot.get().asFile.absolutePath
+            println("--- Git Debug Start ---")
+            println("Current Working Dir: $currentDir")
+
+            // 実際に Git が「ここがルートだ」と思っている場所を確認
+            val rootCheck = ByteArrayOutputStream()
             execOperations.exec {
-                commandLine("git", "tag")
-                standardOutput = tagCheck
-                isIgnoreExitValue = true
+                workingDir = parameters.gitRoot.get().asFile
+                commandLine("git", "rev-parse", "--show-toplevel")
+                standardOutput = rootCheck
             }
-            println("Available tags: ${tagCheck.toString()}")
-            println("-----------------------")
+            println("Git Root as seen by Git: ${rootCheck.toString().trim()}")
+
+            // そもそもタグが存在しているか確認
+            val tagsCheck = ByteArrayOutputStream()
+            execOperations.exec {
+                workingDir = parameters.gitRoot.get().asFile
+                commandLine("git", "tag")
+                standardOutput = tagsCheck
+            }
+            println("Visible tags: ${tagsCheck.toString().trim()}")
+            println("--- Git Debug End ---")
+
             // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
             println("Git Error Output: ${stderr.toString().trim()}")
             println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
@@ -79,7 +94,6 @@ abstract class GitTagValueSource @Inject constructor(
 }
 
 private fun releaseVersionOrSnapshot(tag: String): String? {
-    println("#releaseVersionOrSnapshot $tag")
     val regex = Regex("""(^\d+\.\d+\.)(\d+)([\w-]*)$""")
     val groups = regex.find(tag)?.groups ?: return null
     return if (groups.size == 4) {
