@@ -40,12 +40,14 @@ private abstract class GitTagValueSource @Inject constructor(
     override fun obtain(): String = try {
         // 標準出力をキャプチャするためのByteArrayOutputStream
         val stdout = ByteArrayOutputStream()
+        val stderr = ByteArrayOutputStream()
         // git describe コマンドを実行
         val result = execOperations.exec {
             // commandLine("git", "tag", "--sort=-creatordate") // もし作成日時順の最新タグが良い場合
             commandLine("git", "describe", "--tags", "--abbrev=1")
             standardOutput = stdout
             // エラーが発生してもGradleビルドを止めないようにし、戻り値で判断
+            errorOutput = stderr
             isIgnoreExitValue = true
             // エラー出力は捨てる (必要ならキャプチャも可能)
             errorOutput = ByteArrayOutputStream()
@@ -56,6 +58,7 @@ private abstract class GitTagValueSource @Inject constructor(
             stdout.toString().trim().removePrefix("v")
         } else {
             // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
+            println("Git Error Output: ${stderr.toString().trim()}")
             println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
             "0.0.0-SNAPSHOT"
         }

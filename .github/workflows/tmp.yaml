@@ -27,6 +27,8 @@ jobs:
           submodules: recursive
       - name: fetch tag
         run: git fetch --tags
+      - name: show tag
+        run: git tag
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🚨Run lint
