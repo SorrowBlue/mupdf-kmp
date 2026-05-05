@@ -1,5 +1,4 @@
 import dev.detekt.gradle.Detekt
-import org.gradle.kotlin.dsl.withType
 
 plugins {
     `kotlin-dsl`
