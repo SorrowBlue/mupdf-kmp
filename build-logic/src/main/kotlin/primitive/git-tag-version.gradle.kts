@@ -7,7 +7,12 @@ import org.gradle.api.provider.ValueSourceParameters
 import org.gradle.kotlin.dsl.of
 import org.gradle.process.ExecOperations
 
-val gitTagProvider = providers.of(GitTagValueSource::class) {}
+val gitTagProvider = providers.of(GitTagValueSource::class) {
+    parameters {
+        // ここでリポジトリのルートディレクトリを渡す
+        gitRoot.set(rootProject.layout.projectDirectory)
+    }
+}
 runCatching {
     println("${rootProject.projectDir}")
     val tag = checkNotNull(gitTagProvider.orNull) { "No git tag found." }
@@ -22,13 +27,15 @@ runCatching {
     version = "0.0.0-SNAPSHOT"
 }
 
-// パラメータは不要だが、インターフェースとして定義が必要
-interface GitTagParameters : ValueSourceParameters
-
 // Gitコマンドを実行して最新タグを取得するValueSource
 abstract class GitTagValueSource @Inject constructor(
     private val execOperations: ExecOperations,
-) : ValueSource<String, GitTagParameters> {
+) : ValueSource<String, GitTagValueSource.Params> {
+
+    interface Params : ValueSourceParameters {
+        // 実行ディレクトリをパラメータとして定義
+        val gitRoot: DirectoryProperty
+    }
 
     override fun obtain(): String = try {
         // 標準出力をキャプチャするためのByteArrayOutputStream
@@ -36,8 +43,7 @@ abstract class GitTagValueSource @Inject constructor(
         val stderr = ByteArrayOutputStream()
         // git describe コマンドを実行
         val result = execOperations.exec {
-            println(rootProject.projectDir)
-            workingDir = rootProject.projectDir
+            setWorkingDir(parameters.gitRoot.get().asFile)
             // commandLine("git", "tag", "--sort=-creatordate") // もし作成日時順の最新タグが良い場合
             commandLine("git", "describe", "--tags", "--abbrev=1", "--always")
             standardOutput = stdout
