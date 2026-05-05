@@ -42,8 +42,6 @@ abstract class GitTagValueSource @Inject constructor(
             // エラーが発生してもGradleビルドを止めないようにし、戻り値で判断
             errorOutput = stderr
             isIgnoreExitValue = true
-            // エラー出力は捨てる (必要ならキャプチャも可能)
-            errorOutput = ByteArrayOutputStream()
         }
 
         if (result.exitValue == 0) {
