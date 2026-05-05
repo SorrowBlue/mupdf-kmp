@@ -59,7 +59,7 @@ abstract class GitTagValueSource @Inject constructor(
             val stdout = ByteArrayOutputStream()
             val stderr = ByteArrayOutputStream()
             execOperations.exec {
-                commandLine("git","log","--oneline","-n" ,"5" ,"&&", "git", "tag")
+                commandLine("git","log","--oneline","-n" ,"5")
                 standardOutput = stdout
                 errorOutput = stderr
                 isIgnoreExitValue = true
