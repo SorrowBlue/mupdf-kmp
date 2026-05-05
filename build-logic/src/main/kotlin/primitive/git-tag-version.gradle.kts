@@ -37,7 +37,7 @@ abstract class GitTagValueSource @Inject constructor(
         // git describe コマンドを実行
         val result = execOperations.exec {
             // commandLine("git", "tag", "--sort=-creatordate") // もし作成日時順の最新タグが良い場合
-            commandLine("git", "describe", "--tags", "--abbrev=1")
+            commandLine("git", "describe", "--tags", "--abbrev=1", "--always")
             standardOutput = stdout
             // エラーが発生してもGradleビルドを止めないようにし、戻り値で判断
             errorOutput = stderr
