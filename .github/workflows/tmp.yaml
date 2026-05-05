@@ -26,3 +26,16 @@ jobs:
           submodules: recursive
       - name: describe tag
         run: git describe --tags --abbrev=1
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: 🚨Run lint
+        run: ./gradlew lintAndroidMain
