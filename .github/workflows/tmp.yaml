@@ -17,16 +17,6 @@ permissions:
   security-events: write
 
 jobs:
-  check-tag:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          submodules: recursive
-      - name: describe tag
-        run: git describe --tags --abbrev=1
-
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -35,6 +25,8 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+      - name: fetch tag
+        run: git fetch --tags
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🚨Run lint
