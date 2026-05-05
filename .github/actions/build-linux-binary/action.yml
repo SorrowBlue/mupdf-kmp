@@ -6,10 +6,6 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libfreetype-dev
-    - name: Checkout
-      uses: actions/checkout@v6
-      with:
-        submodules: recursive
     - name: Setup JDK and Gradle
       uses: ./.github/actions/setup-java-gradle
     - name: Build binary

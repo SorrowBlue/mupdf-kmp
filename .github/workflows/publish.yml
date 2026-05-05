@@ -20,12 +20,20 @@ jobs:
   build-windows-binary:
     runs-on: windows-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
       - name: Build MuPDF binary for Windows
         uses: ./.github/actions/build-windows-binary
 
   build-linux-binary:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
       - name: Build MuPDF binary for Windows
         uses: ./.github/actions/build-linux-binary
 

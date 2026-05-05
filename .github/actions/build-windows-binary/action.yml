@@ -2,10 +2,6 @@ name: Build MuPDF binary for Windows
 runs:
   using: "composite"
   steps:
-    - name: Checkout
-      uses: actions/checkout@v6
-      with:
-        submodules: recursive
     - name: Setup JDK and Gradle
       uses: ./.github/actions/setup-java-gradle
     - name: Add msbuild to PATH
