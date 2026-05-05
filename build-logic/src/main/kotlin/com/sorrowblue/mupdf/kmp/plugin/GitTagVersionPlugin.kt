@@ -65,7 +65,7 @@ private abstract class GitTagValueSource @Inject constructor(
                 standardOutput = tagCheck
                 isIgnoreExitValue = true
             }
-            println("Available tags: ${tagCheck.toString()}")
+            println("Available tags: $tagCheck")
             println("-----------------------")
             // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
             println("Git Error Output: ${stderr.toString().trim()}")
@@ -87,7 +87,7 @@ private fun releaseVersionOrSnapshot(tag: String): String? {
             requireNotNull(groups.first()).value
         } else {
             "${requireNotNull(
-                groups[1]
+                groups[1],
             ).value}${requireNotNull(groups[2]).value.toInt().plus(1)}-SNAPSHOT"
         }
     } else {

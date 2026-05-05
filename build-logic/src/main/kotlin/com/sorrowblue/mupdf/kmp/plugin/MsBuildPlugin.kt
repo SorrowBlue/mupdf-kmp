@@ -37,7 +37,7 @@ internal class MsBuildPlugin : Plugin<Project> {
                 libVersion.set(version.toString())
                 dllFile.set(
                     layout.projectDirectory.file(
-                        "src/jvmMain/resources/Windows-x84/mupdf_java.dll"
+                        "src/jvmMain/resources/Windows-x84/mupdf_java.dll",
                     ),
                 )
                 propsFile.set(

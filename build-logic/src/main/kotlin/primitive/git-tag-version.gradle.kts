@@ -8,9 +8,9 @@ version = checkNotNull(formatVersion(tag)) { "git tag is not valid." }
 
 interface GitTagParameters : ValueSourceParameters
 
-abstract class GitTagValueSource @Inject constructor(
-    private val execOperations: ExecOperations,
-) : ValueSource<String, GitTagParameters> {
+@Suppress("AbstractClassCanBeConcreteClass")
+abstract class GitTagValueSource @Inject constructor(private val execOperations: ExecOperations) :
+    ValueSource<String, GitTagParameters> {
 
     override fun obtain(): String = try {
         val stdout = ByteArrayOutputStream()
