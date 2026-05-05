@@ -31,4 +31,4 @@ jobs:
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🚨Run lint
-        run: ./gradlew lintAndroidMain
+        run: ./gradlew build --no-configuration-cache
