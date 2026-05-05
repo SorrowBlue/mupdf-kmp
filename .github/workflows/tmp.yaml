@@ -25,13 +25,12 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: describe
-        run: git describe --tags --abbrev=1 --always
-      - name: Mark directory as safe
-        run: git config --global --add safe.directory '*'
-      - name: list config
-        run: git config --list
+
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
+
+      - name: describe
+        run: git describe --tags --abbrev=1 --always
+
       - name: 🚨Run lint
         run: ./gradlew clean build --no-configuration-cache
