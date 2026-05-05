@@ -28,8 +28,10 @@ jobs:
       - name: describe
         run: git describe --tags --abbrev=1 --always
       - name: Mark directory as safe
-        run: git config --global --add safe.directory /github/workspace
+        run: git config --global --add safe.directory '*'
+      - name: list config
+        run: git config --list
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🚨Run lint
-        run: ./gradlew build --no-configuration-cache
+        run: ./gradlew clean build --no-configuration-cache

@@ -33,13 +33,13 @@ abstract class GitTagValueSource @Inject constructor(
             errorOutput = stderr
             isIgnoreExitValue = true
         }
+        println("Git Stdout: $stdout")
+        println("Git Stderr: ${stderr.toString().trim()}")
         if (result.exitValue == 0) {
             // 成功したら標準出力をトリムして返す
-            println("stdout=$stdout")
             stdout.toString().trim()
         } else {
             // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
-            println("Git Error Output: ${stderr.toString().trim()}")
             println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
             "0.0.0-SNAPSHOT"
         }.also {
