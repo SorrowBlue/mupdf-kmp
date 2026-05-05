@@ -71,6 +71,7 @@ abstract class GitTagValueSource @Inject constructor(
 }
 
 private fun releaseVersionOrSnapshot(tag: String): String? {
+    println("#releaseVersionOrSnapshot $tag")
     val regex = Regex("""(^\d+\.\d+\.)(\d+)([\w-]*)$""")
     val groups = regex.find(tag)?.groups ?: return null
     return if (groups.size == 4) {
