@@ -36,7 +36,6 @@ abstract class GitTagValueSource @Inject constructor(
             isIgnoreExitValue = true
         }
 
-
         if (result.exitValue == 0) {
             // 成功したら標準出力をトリムして返す
             println("stdout=$stdout")
@@ -45,6 +44,21 @@ abstract class GitTagValueSource @Inject constructor(
             // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
             println("Git Error Output: ${stderr.toString().trim()}")
             println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
+
+
+            println("---Debug start---")
+            val stdout = ByteArrayOutputStream()
+            val stderr = ByteArrayOutputStream()
+            execOperations.exec {
+                commandLine("git log --oneline --graph --decorate")
+                standardOutput = stdout
+                errorOutput = stderr
+                isIgnoreExitValue = true
+            }
+            println("stdout=$stdout")
+            println("----------------")
+
+
             "0.0.0-SNAPSHOT"
         }
     } catch (e: Exception) {
