@@ -54,6 +54,30 @@ abstract class GitTagValueSource @Inject constructor(
             }
             println("stdout=$stdout")
             println("----------------")
+        }.also {
+            println("---Debug start---")
+            val stdout = ByteArrayOutputStream()
+            val stderr = ByteArrayOutputStream()
+            execOperations.exec {
+                commandLine("git","branch")
+                standardOutput = stdout
+                errorOutput = stderr
+                isIgnoreExitValue = true
+            }
+            println("stdout=$stdout")
+            println("----------------")
+        }.also {
+            println("---Debug start---")
+            val stdout = ByteArrayOutputStream()
+            val stderr = ByteArrayOutputStream()
+            execOperations.exec {
+                commandLine("git","tag")
+                standardOutput = stdout
+                errorOutput = stderr
+                isIgnoreExitValue = true
+            }
+            println("stdout=$stdout")
+            println("----------------")
         }
     } catch (e: Exception) {
         // その他の予期せぬエラー
