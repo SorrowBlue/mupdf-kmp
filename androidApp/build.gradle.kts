@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.mupdfKmp.detekt)
-    alias(libs.plugins.mupdfKmp.gitTagVersion)
     alias(libs.plugins.mupdfKmp.lint)
 }
 

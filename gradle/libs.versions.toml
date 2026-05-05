@@ -48,7 +48,7 @@ detekt = { id = "dev.detekt", version.ref = "detekt" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 mavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
 mupdfKmp-detekt = { id = "com.sorrowblue.mupdf.kmp.plugin.detekt" }
-mupdfKmp-gitTagVersion = { id = "com.sorrowblue.mupdf.kmp.plugin.git-tag-version" }
+mupdfKmp-gitTagVersion = { id = "primitive.git-tag-version" }
 mupdfKmp-lint = { id = "com.sorrowblue.mupdf.kmp.plugin.lint" }
 mupdfKmp-muBuild = { id = "com.sorrowblue.mupdf.kmp.plugin.mu-build" }
 versionCatalogLinter = { id = "io.github.pemistahl.version-catalog-linter", version.ref = "versionCatalogLinter" }

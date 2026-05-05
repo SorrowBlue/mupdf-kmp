@@ -40,12 +40,14 @@ private abstract class GitTagValueSource @Inject constructor(
     override fun obtain(): String = try {
         // 標準出力をキャプチャするためのByteArrayOutputStream
         val stdout = ByteArrayOutputStream()
+        val stderr = ByteArrayOutputStream()
         // git describe コマンドを実行
         val result = execOperations.exec {
             // commandLine("git", "tag", "--sort=-creatordate") // もし作成日時順の最新タグが良い場合
             commandLine("git", "describe", "--tags", "--abbrev=1")
             standardOutput = stdout
             // エラーが発生してもGradleビルドを止めないようにし、戻り値で判断
+            errorOutput = stderr
             isIgnoreExitValue = true
             // エラー出力は捨てる (必要ならキャプチャも可能)
             errorOutput = ByteArrayOutputStream()
@@ -55,7 +57,18 @@ private abstract class GitTagValueSource @Inject constructor(
             // 成功したら標準出力をトリムして返す
             stdout.toString().trim().removePrefix("v")
         } else {
+            println("--- Git Debug Info ---")
+            // タグが一つでも見えているか確認
+            val tagCheck = java.io.ByteArrayOutputStream()
+            execOperations.exec {
+                commandLine("git", "tag")
+                standardOutput = tagCheck
+                isIgnoreExitValue = true
+            }
+            println("Available tags: $tagCheck")
+            println("-----------------------")
             // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
+            println("Git Error Output: ${stderr.toString().trim()}")
             println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
             "0.0.0-SNAPSHOT"
         }
@@ -74,7 +87,7 @@ private fun releaseVersionOrSnapshot(tag: String): String? {
             requireNotNull(groups.first()).value
         } else {
             "${requireNotNull(
-                groups[1]
+                groups[1],
             ).value}${requireNotNull(groups[2]).value.toInt().plus(1)}-SNAPSHOT"
         }
     } else {

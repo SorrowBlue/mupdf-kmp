@@ -1,5 +1,4 @@
 import dev.detekt.gradle.Detekt
-import org.gradle.kotlin.dsl.withType
 
 plugins {
     `kotlin-dsl`
@@ -55,9 +54,6 @@ gradlePlugin {
     plugins {
         register(libs.plugins.mupdfKmp.muBuild) {
             implementationClass = "com.sorrowblue.mupdf.kmp.plugin.MsBuildPlugin"
-        }
-        register(libs.plugins.mupdfKmp.gitTagVersion) {
-            implementationClass = "com.sorrowblue.mupdf.kmp.plugin.GitTagVersionPlugin"
         }
         register(libs.plugins.mupdfKmp.detekt) {
             implementationClass = "com.sorrowblue.mupdf.kmp.plugin.DetektConventionPlugin"

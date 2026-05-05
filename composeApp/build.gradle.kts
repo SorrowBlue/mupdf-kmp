@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.mupdfKmp.detekt)
-    alias(libs.plugins.mupdfKmp.gitTagVersion)
     alias(libs.plugins.mupdfKmp.lint)
 }
 
