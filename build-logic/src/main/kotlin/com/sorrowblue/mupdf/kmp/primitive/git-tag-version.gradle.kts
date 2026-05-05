@@ -1,4 +1,4 @@
-package primitive
+package com.sorrowblue.mupdf.kmp.primitive
 
 import java.io.ByteArrayOutputStream
 

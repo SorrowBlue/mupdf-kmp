@@ -20,7 +20,7 @@ kotlin {
     sourceSets {
         jvmMain {
             dependencies {
-                implementation(projects.composeApp)
+                implementation(projects.shared)
                 implementation(projects.lib)
                 implementation(compose.desktop.currentOs)
             }

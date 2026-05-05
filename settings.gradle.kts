@@ -45,8 +45,8 @@ plugins {
     id("com.android.settings") version "9.2.0"
 }
 
-include(":composeApp")
 include(":androidApp")
 include(":desktopApp")
 include(":lib")
 include(":lib:android")
+include(":shared")

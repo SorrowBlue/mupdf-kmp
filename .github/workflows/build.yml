@@ -28,47 +28,25 @@ jobs:
           name: desktopApp-debug.apk
           path: desktopApp/build/outputs/apk/debug/
 
-  build-windows:
+  build-windows-binary:
     runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           submodules: recursive
-      - name: Setup JDK and Gradle
-        uses: ./.github/actions/setup-java-gradle
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v3
-      - name: Run buildJavaviewerlib
-        run: ./gradlew :lib:addUtf8BomToFiles :lib:desktopResourceWindowsX86 :lib:desktopResourceWindowsAMD64
-      - name: Upload Windows library
-        uses: actions/upload-artifact@v7
-        with:
-          name: windows
-          path: lib/src/jvmMain/resources/
-          compression-level: 0
+      - name: Build MuPDF binary for Windows
+        uses: ./.github/actions/build-windows-binary
 
-  build-linux:
+  build-linux-binary:
     runs-on: ubuntu-latest
     steps:
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libfreetype-dev
       - name: Checkout
         uses: actions/checkout@v6
         with:
           submodules: recursive
-      - name: Setup JDK and Gradle
-        uses: ./.github/actions/setup-java-gradle
-      - name: Run buildJavaviewerlib
-        run: ./gradlew :lib:desktopResourceLinuxAMD64
-      - name: Upload Linux library
-        uses: actions/upload-artifact@v7
-        with:
-          name: linux
-          path: lib/src/jvmMain/resources/
-          compression-level: 0
+      - name: Build MuPDF binary for Windows
+        uses: ./.github/actions/build-linux-binary
 
   build-desktop:
     strategy:
@@ -76,23 +54,16 @@ jobs:
         os: [ ubuntu-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
     needs:
-      - build-windows
-      - build-linux
+      - build-windows-binary
+      - build-linux-binary
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           submodules: recursive
-      - name: Download Windows Artifact
+      - name: Download Artifact
         uses: actions/download-artifact@v8
         with:
-          name: windows
-          path: lib/src/jvmMain/resources/
-          merge-multiple: true
-      - name: Download Linux Artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: linux
           path: lib/src/jvmMain/resources/
           merge-multiple: true
       - name: Setup JDK and Gradle
