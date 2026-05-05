@@ -2,91 +2,39 @@ package primitive
 
 import java.io.ByteArrayOutputStream
 
-
-afterEvaluate {
-    runCatching {
-        val gitTagProvider = providers.of(GitTagValueSource::class) {}
-        val tag = checkNotNull(gitTagProvider.orNull) { "No git tag found." }
-        version = checkNotNull(formatVersion(tag)) { "git tag is not valid." }
-    }.onFailure {
-        logger.lifecycle(it.message)
-    }
-}
+private val gitTagProvider = providers.of(GitTagValueSource::class) {}
+private val tag = checkNotNull(gitTagProvider.orNull) { "No git tag found." }
+version = checkNotNull(formatVersion(tag)) { "git tag is not valid." }
 
 interface GitTagParameters : ValueSourceParameters
 
-// Gitコマンドを実行して最新タグを取得するValueSource
 abstract class GitTagValueSource @Inject constructor(
     private val execOperations: ExecOperations,
 ) : ValueSource<String, GitTagParameters> {
 
     override fun obtain(): String = try {
-        // 標準出力をキャプチャするためのByteArrayOutputStream
         val stdout = ByteArrayOutputStream()
         val stderr = ByteArrayOutputStream()
-        // git describe コマンドを実行
         val result = execOperations.exec {
-            // commandLine("git", "tag", "--sort=-creatordate") // もし作成日時順の最新タグが良い場合
-            commandLine("git", "describe", "--tags", "--abbrev=1", "--always")
+            commandLine("git", "describe", "--tags", "--abbrev=1")
             standardOutput = stdout
-            // エラーが発生してもGradleビルドを止めないようにし、戻り値で判断
             errorOutput = stderr
             isIgnoreExitValue = true
         }
-        println("Git Stdout: $stdout")
-        println("Git Stderr: ${stderr.toString().trim()}")
         if (result.exitValue == 0) {
-            // 成功したら標準出力をトリムして返す
             stdout.toString().trim()
         } else {
-            // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
             println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
+            println("Warning: $stderr")
             "0.0.0-SNAPSHOT"
-        }.also {
-            println("---Debug start---")
-            val stdout = ByteArrayOutputStream()
-            val stderr = ByteArrayOutputStream()
-            execOperations.exec {
-                commandLine("pwd")
-                standardOutput = stdout
-                errorOutput = stderr
-                isIgnoreExitValue = true
-            }
-            println("stdout=$stdout")
-            println("----------------")
-        }.also {
-            println("---Debug start---")
-            val stdout = ByteArrayOutputStream()
-            val stderr = ByteArrayOutputStream()
-            execOperations.exec {
-                commandLine("git","log","--oneline","-n" ,"5")
-                standardOutput = stdout
-                errorOutput = stderr
-                isIgnoreExitValue = true
-            }
-            println("stdout=$stdout")
-            println("----------------")
-        }.also {
-            println("---Debug start---")
-            val stdout = ByteArrayOutputStream()
-            val stderr = ByteArrayOutputStream()
-            execOperations.exec {
-                commandLine("git", "tag")
-                standardOutput = stdout
-                errorOutput = stderr
-                isIgnoreExitValue = true
-            }
-            println("stdout=$stdout")
-            println("----------------")
         }
     } catch (e: Exception) {
-        // その他の予期せぬエラー
         println("Error: Failed to execute git command: ${e.message}")
         "0.0.0-SNAPSHOT"
     }
 }
 
-fun formatVersion(input: String): String {
+private fun formatVersion(input: String): String {
     if (input.isEmpty()) return ""
 
     // git describe の形式 (タグ)-(コミット数)-g(ハッシュ) に一致するか確認
@@ -121,6 +69,6 @@ fun formatVersion(input: String): String {
             "$baseTag-beta01-SNAPSHOT"
         }
     }.also {
-        logger.lifecycle("#formatVersion $input -> $it")
+        logger.lifecycle("version format: $input -> $it")
     }
 }
