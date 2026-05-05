@@ -47,31 +47,7 @@ abstract class GitTagValueSource @Inject constructor(
             val stdout = ByteArrayOutputStream()
             val stderr = ByteArrayOutputStream()
             execOperations.exec {
-                commandLine("git","log","--oneline","--graph","--decorate")
-                standardOutput = stdout
-                errorOutput = stderr
-                isIgnoreExitValue = true
-            }
-            println("stdout=$stdout")
-            println("----------------")
-        }.also {
-            println("---Debug start---")
-            val stdout = ByteArrayOutputStream()
-            val stderr = ByteArrayOutputStream()
-            execOperations.exec {
-                commandLine("git","branch")
-                standardOutput = stdout
-                errorOutput = stderr
-                isIgnoreExitValue = true
-            }
-            println("stdout=$stdout")
-            println("----------------")
-        }.also {
-            println("---Debug start---")
-            val stdout = ByteArrayOutputStream()
-            val stderr = ByteArrayOutputStream()
-            execOperations.exec {
-                commandLine("git","tag")
+                commandLine("pwd","&&", "git","log","--oneline","-n" ,"5" ,"&&", "git", "tag")
                 standardOutput = stdout
                 errorOutput = stderr
                 isIgnoreExitValue = true
