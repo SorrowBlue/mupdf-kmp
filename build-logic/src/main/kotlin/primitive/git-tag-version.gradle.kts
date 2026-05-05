@@ -52,35 +52,36 @@ abstract class GitTagValueSource @Inject constructor(
             isIgnoreExitValue = true
         }
 
+
+        val currentDir = parameters.gitRoot.get().asFile.absolutePath
+        println("--- Git Debug Start ---")
+        println("Current Working Dir: $currentDir")
+
+        // 実際に Git が「ここがルートだ」と思っている場所を確認
+        val rootCheck = ByteArrayOutputStream()
+        execOperations.exec {
+            workingDir = parameters.gitRoot.get().asFile
+            commandLine("git", "rev-parse", "--show-toplevel")
+            standardOutput = rootCheck
+        }
+        println("Git Root as seen by Git: ${rootCheck.toString().trim()}")
+
+        // そもそもタグが存在しているか確認
+        val tagsCheck = ByteArrayOutputStream()
+        execOperations.exec {
+            workingDir = parameters.gitRoot.get().asFile
+            commandLine("git", "tag")
+            standardOutput = tagsCheck
+        }
+        println("Visible tags: ${tagsCheck.toString().trim()}")
+        println("--- Git Debug End ---")
+
+
         if (result.exitValue == 0) {
             // 成功したら標準出力をトリムして返す
             println("stdout.toString() ${stdout}")
             stdout.toString().trim().removePrefix("v")
         } else {
-
-            val currentDir = parameters.gitRoot.get().asFile.absolutePath
-            println("--- Git Debug Start ---")
-            println("Current Working Dir: $currentDir")
-
-            // 実際に Git が「ここがルートだ」と思っている場所を確認
-            val rootCheck = ByteArrayOutputStream()
-            execOperations.exec {
-                workingDir = parameters.gitRoot.get().asFile
-                commandLine("git", "rev-parse", "--show-toplevel")
-                standardOutput = rootCheck
-            }
-            println("Git Root as seen by Git: ${rootCheck.toString().trim()}")
-
-            // そもそもタグが存在しているか確認
-            val tagsCheck = ByteArrayOutputStream()
-            execOperations.exec {
-                workingDir = parameters.gitRoot.get().asFile
-                commandLine("git", "tag")
-                standardOutput = tagsCheck
-            }
-            println("Visible tags: ${tagsCheck.toString().trim()}")
-            println("--- Git Debug End ---")
-
             // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
             println("Git Error Output: ${stderr.toString().trim()}")
             println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
