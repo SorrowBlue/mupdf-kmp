@@ -50,26 +50,4 @@ tasks.withType<Detekt>().configureEach {
     }
 }
 
-gradlePlugin {
-    plugins {
-        register(libs.plugins.mupdfKmp.muBuild) {
-            implementationClass = "com.sorrowblue.mupdf.kmp.plugin.MsBuildPlugin"
-        }
-        register(libs.plugins.mupdfKmp.detekt) {
-            implementationClass = "com.sorrowblue.mupdf.kmp.plugin.DetektConventionPlugin"
-        }
-        register(libs.plugins.mupdfKmp.lint) {
-            implementationClass = "com.sorrowblue.mupdf.kmp.plugin.AndroidLintConventionPlugin"
-        }
-    }
-}
-
 private val currentLibs get() = libs
-
-private fun NamedDomainObjectContainer<PluginDeclaration>.register(
-    provider: Provider<PluginDependency>,
-    function: PluginDeclaration.() -> Unit,
-) = register(provider.get().pluginId) {
-    id = name
-    function()
-}

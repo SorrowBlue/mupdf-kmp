@@ -1,0 +1,22 @@
+name: Build MuPDF binary for Windows
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libfreetype-dev
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        submodules: recursive
+    - name: Setup JDK and Gradle
+      uses: ./.github/actions/setup-java-gradle
+    - name: Build binary
+      run: ./gradlew :lib:desktopResourceLinuxAMD64
+    - name: Upload Linux library
+      uses: actions/upload-artifact@v7
+      with:
+        name: linux
+        path: lib/src/jvmMain/resources/
+        compression-level: 0

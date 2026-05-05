@@ -32,5 +32,5 @@ android {
 }
 
 dependencies {
-    implementation(projects.composeApp)
+    implementation(projects.shared)
 }

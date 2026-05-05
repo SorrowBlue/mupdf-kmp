@@ -39,7 +39,7 @@ fun rememberAppState(): AppState {
     val context = LocalPlatformContext.current
     val state = remember { AppStateImpl(context = context, scope = scope) }
     state.platformDirectory = platformDirectory
-    state.filePickerLauncher = rememberFilePickerLauncher(FileKitType.File("pdf")) { file ->
+    state.filePickerLauncher = rememberFilePickerLauncher(FileKitType.File("*")) { file ->
         state.onResultFile(file)
     }
     state.directoryPickerLauncher =
