@@ -30,6 +30,7 @@ abstract class GitTagValueSource @Inject constructor(
 
         if (result.exitValue == 0) {
             // 成功したら標準出力をトリムして返す
+            logger.lifecycle("stdout=$stdout")
             stdout.toString().trim()
         } else {
             // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
