@@ -23,8 +23,7 @@ jobs:
           submodules: recursive
       - name: describe
         run: git describe --tags --abbrev=1
-#      - name: Setup JDK and Gradle
-#        uses: ./.github/actions/setup-java-gradle
-#      - name: 🚨Run lint
-#        run: ./gradlew lintAndroidMain
-#
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: 🚨Run lint
+        run: ./gradlew lintAndroidMain
