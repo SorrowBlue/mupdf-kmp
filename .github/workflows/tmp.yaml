@@ -23,6 +23,10 @@ jobs:
           submodules: recursive
       - name: describe
         run: git describe --tags --abbrev=1
+
+      - name: Fix git ownership
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🚨Run lint
