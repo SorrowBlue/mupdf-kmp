@@ -13,16 +13,16 @@ permissions:
   security-events: write
 
 jobs:
-  clear:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Delete Branch Cache
-        uses: snnaplab/delete-branch-cache-action@v1
+#  clear:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Delete Branch Cache
+#        uses: snnaplab/delete-branch-cache-action@v1
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: describe
