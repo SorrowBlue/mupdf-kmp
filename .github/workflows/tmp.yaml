@@ -13,6 +13,11 @@ permissions:
   security-events: write
 
 jobs:
+  clear:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete Branch Cache
+        uses: snnaplab/delete-branch-cache-action@v1
   lint:
     runs-on: ubuntu-latest
     steps:
