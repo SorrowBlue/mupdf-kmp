@@ -5,9 +5,7 @@ import java.io.ByteArrayOutputStream
 
 afterEvaluate {
     runCatching {
-        logger.lifecycle("start")
         val gitTagProvider = providers.of(GitTagValueSource::class) {}
-        logger.lifecycle("gitTagProvider $gitTagProvider")
         val tag = checkNotNull(gitTagProvider.orNull) { "No git tag found." }
         version = checkNotNull(formatVersion(tag)) { "git tag is not valid." }
     }.onFailure {
@@ -35,7 +33,6 @@ abstract class GitTagValueSource @Inject constructor(
             errorOutput = stderr
             isIgnoreExitValue = true
         }
-        debug(execOperations)
         if (result.exitValue == 0) {
             // 成功したら標準出力をトリムして返す
             println("stdout=$stdout")
@@ -45,28 +42,24 @@ abstract class GitTagValueSource @Inject constructor(
             println("Git Error Output: ${stderr.toString().trim()}")
             println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
             "0.0.0-SNAPSHOT"
+        }.also {
+            println("---Debug start---")
+            val stdout = ByteArrayOutputStream()
+            val stderr = ByteArrayOutputStream()
+            execOperations.exec {
+                commandLine("git","log","--oneline","--graph","--decorate")
+                standardOutput = stdout
+                errorOutput = stderr
+                isIgnoreExitValue = true
+            }
+            println("stdout=$stdout")
+            println("----------------")
         }
     } catch (e: Exception) {
         // その他の予期せぬエラー
         println("Error: Failed to execute git command: ${e.message}")
         "0.0.0-SNAPSHOT"
     }
-}
-
-fun debug(execOperations: ExecOperations) {
-    println("---Debug start---")
-    val stdout = ByteArrayOutputStream()
-    val stderr = ByteArrayOutputStream()
-    execOperations.exec {
-        commandLine("git log --oneline --graph --decorate")
-        standardOutput = stdout
-        errorOutput = stderr
-        isIgnoreExitValue = true
-    }
-    println("stdout=$stdout")
-    println("----------------")
-
-
 }
 
 fun formatVersion(input: String): String {
