@@ -57,6 +57,16 @@ private abstract class GitTagValueSource @Inject constructor(
             // 成功したら標準出力をトリムして返す
             stdout.toString().trim().removePrefix("v")
         } else {
+            println("--- Git Debug Info ---")
+            // タグが一つでも見えているか確認
+            val tagCheck = java.io.ByteArrayOutputStream()
+            execOperations.exec {
+                commandLine("git", "tag")
+                standardOutput = tagCheck
+                isIgnoreExitValue = true
+            }
+            println("Available tags: ${tagCheck.toString()}")
+            println("-----------------------")
             // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
             println("Git Error Output: ${stderr.toString().trim()}")
             println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
