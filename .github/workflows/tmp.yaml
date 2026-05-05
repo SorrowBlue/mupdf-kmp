@@ -20,6 +20,9 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - name: describe
+        run: git describe --tags --abbrev=1 --always
+
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🚨Run lint
