@@ -7,6 +7,7 @@ runs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v3
     - name: Build binary
+      shell: bash
       run: ./gradlew :lib:desktopResourceWindowsX86 :lib:desktopResourceWindowsAMD64
     - name: Upload Windows library
       uses: actions/upload-artifact@v7

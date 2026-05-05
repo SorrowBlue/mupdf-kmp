@@ -3,12 +3,14 @@ runs:
   using: "composite"
   steps:
     - name: Install dependencies
+      shell: bash
       run: |
         sudo apt-get update
         sudo apt-get install -y libfreetype-dev
     - name: Setup JDK and Gradle
       uses: ./.github/actions/setup-java-gradle
     - name: Build binary
+      shell: bash
       run: ./gradlew :lib:desktopResourceLinuxAMD64
     - name: Upload Linux library
       uses: actions/upload-artifact@v7
