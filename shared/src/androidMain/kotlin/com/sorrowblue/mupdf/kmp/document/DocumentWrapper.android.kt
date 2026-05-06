@@ -8,7 +8,7 @@ import com.artifex.mupdf.fitz.Document
 import com.artifex.mupdf.fitz.SeekableInputStream
 import com.sorrowblue.mupdf.kmp.MuPDF
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.dialogs.uri
+import io.github.vinceglb.filekit.dialogs.toAndroidUri
 
 @SuppressLint("StaticFieldLeak")
 actual object DocumentWrapper {
@@ -21,7 +21,7 @@ actual object DocumentWrapper {
     }
 
     actual fun openDocument(context: PlatformContext, platformFile: PlatformFile) {
-        stream = DeviceSeekableInputStream(context, platformFile.uri)
+        stream = DeviceSeekableInputStream(context, platformFile.toAndroidUri())
         document = Document.openDocument(stream, "pdf")
     }
 

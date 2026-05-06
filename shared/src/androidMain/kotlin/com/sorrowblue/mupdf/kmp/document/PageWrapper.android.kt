@@ -5,12 +5,12 @@ import android.provider.DocumentsContract
 import com.artifex.mupdf.fitz.Page
 import com.artifex.mupdf.fitz.android.AndroidDrawDevice
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.dialogs.uri
+import io.github.vinceglb.filekit.dialogs.toAndroidUri
 
 actual class PageWrapper(private val page: Page) {
 
     actual fun save(platformContext: PlatformContext, platformFile: PlatformFile, index: Int) {
-        val directoryUri = platformFile.uri
+        val directoryUri = platformFile.toAndroidUri()
         val docTreeUri = DocumentsContract.buildDocumentUriUsingTree(
             directoryUri,
             DocumentsContract.getTreeDocumentId(directoryUri),

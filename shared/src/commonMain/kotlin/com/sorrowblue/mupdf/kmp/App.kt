@@ -38,7 +38,7 @@ fun App(modifier: Modifier = Modifier) {
             uiState = state.uiState,
             onClickOpenPdf = state::onClickOpenPdf,
             onClickOpenDirectory = state::openDirectory,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }
@@ -116,7 +116,7 @@ private fun AppPreview() {
         App(
             uiState = AppUiState(),
             onClickOpenPdf = {},
-            onClickOpenDirectory = {}
+            onClickOpenDirectory = {},
         )
     }
 }

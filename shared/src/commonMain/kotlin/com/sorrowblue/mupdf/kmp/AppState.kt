@@ -12,6 +12,7 @@ import com.sorrowblue.mupdf.kmp.document.PlatformContext
 import com.sorrowblue.mupdf.kmp.document.PlatformDirectory
 import com.sorrowblue.mupdf.kmp.document.rememberPlatformDirectory
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.PickerResultLauncher
 import io.github.vinceglb.filekit.dialogs.compose.rememberDirectoryPickerLauncher
@@ -42,10 +43,11 @@ fun rememberAppState(): AppState {
     state.filePickerLauncher = rememberFilePickerLauncher(FileKitType.File("*")) { file ->
         state.onResultFile(file)
     }
-    state.directoryPickerLauncher =
-        rememberDirectoryPickerLauncher("PDFのページを展開するフォルダを選択") { file ->
-            state.onResultDirectory(file)
-        }
+    state.directoryPickerLauncher = rememberDirectoryPickerLauncher(
+        directory = null,
+        dialogSettings = FileKitDialogSettings.createDefault(),
+        onResult = state::onResultDirectory,
+    )
     return state
 }
 
