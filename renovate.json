@@ -22,10 +22,9 @@
         "com.android.{/,}**",
         "org.jetbrains.kotlin:{/,}**",
         "org.jetbrains.kotlin.{/,}**",
-        "com.google.devtools.ksp{/,}**"
-      ],
-      "matchManagers": ["gradle-wrapper"],
-      "matchPackageNames": ["gradle"],
+        "com.google.devtools.ksp{/,}**",
+        "gradle"
+      ]
     }
   ]
 }
