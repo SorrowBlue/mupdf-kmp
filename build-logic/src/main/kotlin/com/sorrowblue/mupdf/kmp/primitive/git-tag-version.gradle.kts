@@ -63,10 +63,24 @@ private fun formatVersion(input: String): String {
             // 元の桁数を維持して（例: 01 -> 02）フォーマット
             val formattedNumber = nextNumber.toString().padStart(numberStr.length, '0')
 
-            "$prefix$formattedNumber-SNAPSHOT"
+            "$prefix$formattedNumber-SNAPSHOT".removePrefix("v")
         } else {
-            // ケース: betaが含まれない場合 -> -beta01-SNAPSHOT を付与
-            "$baseTag-beta01-SNAPSHOT"
+            // ケース: betaが含まれない場合 -> 末尾の数値をインクリメントして -beta01-SNAPSHOT を付与
+            // 例: v1.0.3 -> v1.0.4-beta01-SNAPSHOT
+            val trailingNumberRegex = """^(.*?)(\d+)$""".toRegex()
+            val trailingNumberMatch = trailingNumberRegex.find(baseTag)
+
+            if (trailingNumberMatch != null) {
+                val prefix = trailingNumberMatch.groupValues[1]
+                val numberStr = trailingNumberMatch.groupValues[2]
+                val nextNumber = numberStr.toInt() + 1
+                val formattedNumber = nextNumber.toString().padStart(numberStr.length, '0')
+
+                "$prefix$formattedNumber-beta01-SNAPSHOT".removePrefix("v")
+            } else {
+                // 末尾数値がないタグはそのまま
+                input.removePrefix("v")
+            }
         }
     }.also {
         logger.lifecycle("version format: $input -> $it")
