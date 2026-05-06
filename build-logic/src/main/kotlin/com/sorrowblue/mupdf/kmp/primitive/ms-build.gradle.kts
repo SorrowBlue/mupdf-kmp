@@ -37,7 +37,8 @@ private val copyJavaviewerlibDll = tasks.register<Copy>("copyJavaviewerlibDll") 
     description = "Copies javaviewerlib.dll to the resources folder."
     from(layout.projectDirectory.file("../mupdf/platform/win32/Release/javaviewerlib.dll"))
     into(layout.projectDirectory.dir("src/jvmMain/resources/$windowsX84"))
-    rename { mupdfJavaDll }
+    val renameTo = mupdfJavaDll
+    rename { renameTo }
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 private val generateMupdfLibPropertiesWindowsX86 =
@@ -77,7 +78,8 @@ private val copyJavaviewerlib64Dll = tasks.register<Copy>("copyJavaviewerlib64Dl
     description = "Copies javaviewerlib64.dll to the resources folder."
     from(layout.projectDirectory.file("../mupdf/platform/win32/x64/Release/javaviewerlib64.dll"))
     into(layout.projectDirectory.dir("src/jvmMain/resources/$windowsAmd64"))
-    rename { mupdfJavaDll }
+    val renameTo = mupdfJavaDll
+    rename { renameTo }
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 private val generateMupdfLibPropertiesWindowsAMD64 =
@@ -115,7 +117,8 @@ private val copyLibmupdfJava64So = tasks.register<Copy>("copyLibmupdfJava64So") 
     description = "Copies libmupdf_java64.so to the resources folder."
     from(layout.projectDirectory.file("../mupdf/build/java/release/libmupdf_java64.so"))
     into(layout.projectDirectory.dir("src/jvmMain/resources/$linuxAmd64"))
-    rename { mupdfJavaSo }
+    val renameTo = mupdfJavaSo
+    rename { renameTo }
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 private val generateMupdfLibPropertiesLinuxAMD64 =
