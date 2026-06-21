@@ -21,7 +21,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: recursive
       - name: Build MuPDF binary for Windows
@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: recursive
       - name: Build MuPDF binary for Windows
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: main
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           submodules: recursive
@@ -77,7 +77,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: main
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           submodules: recursive
