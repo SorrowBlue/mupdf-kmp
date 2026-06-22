@@ -16,7 +16,7 @@ filekit = "0.14.1"
 java = "21"
 kotlin = "2.3.21"
 kotlinx-coroutines = "1.10.2"
-maven-publish = "0.36.0"
+maven-publish = "0.37.0"
 ndkVersion = "28.1.13356709"
 versionCatalogLinter = "1.1.0"
 
